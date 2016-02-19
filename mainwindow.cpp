@@ -16,6 +16,8 @@
  */
 
 #include <QtWidgets>
+#include <QWebView>
+#include <QWebInspector>
 
 #include "mainwindow.h"
 
@@ -25,6 +27,14 @@ MainWindow::MainWindow()
 	setCentralWidget(webView);
 	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
 	webView->load(QUrl("qrc:/example_editor.html"));
+
+	webInspectorDock = new QDockWidget(tr("Inspector"));
+	webInspectorDock->setObjectName("webInspectorDock");
+	webInspector = new QWebInspector;
+	webInspector->setPage(webView->page());
+	webView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+	webInspectorDock->setWidget(webInspector);
+	addDockWidget(Qt::BottomDockWidgetArea, webInspectorDock);
 
 	createActions();
 	createMenus();
@@ -172,6 +182,12 @@ void MainWindow::createActions()
 	aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
+	debugConsoleAct = webInspectorDock->toggleViewAction();
+	debugConsoleAct->setIcon(QIcon::fromTheme("utilities-terminal"));
+	debugConsoleAct->setCheckable(true);
+	debugConsoleAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_I));
+	debugConsoleAct->setStatusTip(tr("Show web inspector"));
+
 	/*
 	cutAct->setEnabled(false);
 	connect(webView, SIGNAL(copyAvailable(bool)),
@@ -215,23 +231,31 @@ void MainWindow::createMenus()
 	helpMenu = menuBar()->addMenu(tr("&Help"));
 	helpMenu->addAction(aboutAct);
 	helpMenu->addAction(aboutQtAct);
+	helpMenu->addSeparator();
+	helpMenu->addAction(debugConsoleAct);
 }
 
 
 void MainWindow::createToolBars()
 {
 	fileToolBar = addToolBar(tr("File"));
+	fileToolBar->setObjectName("fileToolBar");
 	fileToolBar->addAction(newAct);
 	fileToolBar->addAction(openAct);
 	fileToolBar->addAction(saveAct);
 
 	editToolBar = addToolBar(tr("Edit"));
+	editToolBar->setObjectName("editToolBar");
 	editToolBar->addAction(undoAct);
 	editToolBar->addAction(redoAct);
 	editToolBar->addSeparator();
 	editToolBar->addAction(cutAct);
 	editToolBar->addAction(copyAct);
 	editToolBar->addAction(pasteAct);
+
+	debugToolBar = addToolBar(tr("Debug"));
+	debugToolBar->setObjectName("debugToolBar");
+	debugToolBar->addAction(debugConsoleAct);
 }
 
 
@@ -243,19 +267,21 @@ void MainWindow::createStatusBar()
 
 void MainWindow::readSettings()
 {
-	QSettings settings("WebWrapEditor", "Application Example");
-	QPoint pos = settings.value("pos", QPoint(100, 100)).toPoint();
-	QSize size = settings.value("size", QSize(800, 600)).toSize();
-	resize(size);
-	move(pos);
+	QSettings settings("WebWrapEditor", "WebWrapEditor");
+	settings.beginGroup("mainWindow");
+	restoreGeometry(settings.value("geometry").toByteArray());
+	restoreState(settings.value("state").toByteArray());
+	settings.endGroup();
 }
 
 
 void MainWindow::writeSettings()
 {
-	QSettings settings("WebWrapEditor", "Application Example");
-	settings.setValue("pos", pos());
-	settings.setValue("size", size());
+	QSettings settings("WebWrapEditor", "WebWrapEditor");
+	settings.beginGroup("mainWindow");
+	settings.setValue("geometry", saveGeometry());
+	settings.setValue("state", saveState());
+	settings.endGroup();
 }
 
 
@@ -346,4 +372,5 @@ QString MainWindow::strippedName(const QString &fullFileName)
 {
 	return QFileInfo(fullFileName).fileName();
 }
+
 

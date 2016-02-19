@@ -19,11 +19,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QWebView>
 
 class QAction;
 class QMenu;
 class QPlainTextEdit;
+class QWebView;
+class QWebInspector;
+class QDockWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -35,8 +37,8 @@ class MainWindow : public QMainWindow
 	protected:
 		void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
-		private slots:
-			void newFile();
+	private slots:
+		void newFile();
 		void open();
 		bool save();
 		bool saveAs();
@@ -57,6 +59,9 @@ class MainWindow : public QMainWindow
 		QString strippedName(const QString &fullFileName);
 
 		QWebView *webView;
+		QDockWidget *webInspectorDock;
+		QWebInspector *webInspector;
+
 		QString curFile;
 
 		QMenu *fileMenu;
@@ -64,6 +69,7 @@ class MainWindow : public QMainWindow
 		QMenu *helpMenu;
 		QToolBar *fileToolBar;
 		QToolBar *editToolBar;
+		QToolBar *debugToolBar;
 		QAction *newAct;
 		QAction *openAct;
 		QAction *saveAct;
@@ -76,6 +82,7 @@ class MainWindow : public QMainWindow
 		QAction *pasteAct;
 		QAction *aboutAct;
 		QAction *aboutQtAct;
+		QAction *debugConsoleAct;
 };
 
 #endif
