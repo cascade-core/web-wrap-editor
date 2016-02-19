@@ -138,6 +138,16 @@ void MainWindow::createActions()
 	exitAct->setStatusTip(tr("Exit the application"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
+	undoAct = new QAction(QIcon::fromTheme("edit-undo"), tr("&Undo"), this);
+	undoAct->setShortcuts(QKeySequence::Undo);
+	undoAct->setStatusTip(tr("Undo recent action"));
+	connect(undoAct, SIGNAL(triggered()), textEdit, SLOT(undo()));
+
+	redoAct = new QAction(QIcon::fromTheme("edit-redo"), tr("&Redo"), this);
+	redoAct->setShortcuts(QKeySequence::Redo);
+	redoAct->setStatusTip(tr("Redo recent action"));
+	connect(redoAct, SIGNAL(triggered()), textEdit, SLOT(redo()));
+
 	cutAct = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
 	cutAct->setShortcuts(QKeySequence::Cut);
 	cutAct->setStatusTip(tr("Cut the current selection's contents to the clipboard"));
@@ -162,11 +172,20 @@ void MainWindow::createActions()
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 	cutAct->setEnabled(false);
-	copyAct->setEnabled(false);
 	connect(textEdit, SIGNAL(copyAvailable(bool)),
 			cutAct, SLOT(setEnabled(bool)));
+
+	copyAct->setEnabled(false);
 	connect(textEdit, SIGNAL(copyAvailable(bool)),
 			copyAct, SLOT(setEnabled(bool)));
+
+	undoAct->setEnabled(false);
+	connect(textEdit, SIGNAL(undoAvailable(bool)),
+			undoAct, SLOT(setEnabled(bool)));
+
+	redoAct->setEnabled(false);
+	connect(textEdit, SIGNAL(redoAvailable(bool)),
+			redoAct, SLOT(setEnabled(bool)));
 }
 
 
@@ -181,6 +200,9 @@ void MainWindow::createMenus()
 	fileMenu->addAction(exitAct);
 
 	editMenu = menuBar()->addMenu(tr("&Edit"));
+	editMenu->addAction(undoAct);
+	editMenu->addAction(redoAct);
+	editMenu->addSeparator();
 	editMenu->addAction(cutAct);
 	editMenu->addAction(copyAct);
 	editMenu->addAction(pasteAct);
@@ -201,6 +223,9 @@ void MainWindow::createToolBars()
 	fileToolBar->addAction(saveAct);
 
 	editToolBar = addToolBar(tr("Edit"));
+	editToolBar->addAction(undoAct);
+	editToolBar->addAction(redoAct);
+	editToolBar->addSeparator();
 	editToolBar->addAction(cutAct);
 	editToolBar->addAction(copyAct);
 	editToolBar->addAction(pasteAct);
@@ -215,9 +240,9 @@ void MainWindow::createStatusBar()
 
 void MainWindow::readSettings()
 {
-	QSettings settings("QtProject", "Application Example");
-	QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-	QSize size = settings.value("size", QSize(400, 400)).toSize();
+	QSettings settings("WebWrapEditor", "Application Example");
+	QPoint pos = settings.value("pos", QPoint(100, 100)).toPoint();
+	QSize size = settings.value("size", QSize(800, 600)).toSize();
 	resize(size);
 	move(pos);
 }
@@ -225,7 +250,7 @@ void MainWindow::readSettings()
 
 void MainWindow::writeSettings()
 {
-	QSettings settings("QtProject", "Application Example");
+	QSettings settings("WebWrapEditor", "Application Example");
 	settings.setValue("pos", pos());
 	settings.setValue("size", size());
 }
