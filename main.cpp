@@ -16,18 +16,40 @@
  */
 
 #include <QApplication>
+#include <QCommandLineParser>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-    //Q_INIT_RESOURCE(application);
+	//Q_INIT_RESOURCE(application);
 
-    QApplication app(argc, argv);
-    app.setOrganizationName("WebWrapEditor");
-    app.setApplicationName("WebWrapEditor");
-    MainWindow mainWin;
-    mainWin.show();
-    return app.exec();
+	QApplication app(argc, argv);
+	app.setOrganizationName("WebWrapEditor");
+	app.setApplicationName("WebWrapEditor");
+	app.setApplicationVersion(GIT_VERSION);
+
+	QCommandLineParser parser;
+	parser.setApplicationDescription("Test helper");
+	parser.addHelpOption();
+	parser.addVersionOption();
+	parser.addPositionalArgument("filename", QCoreApplication::translate("main", "File to edit"));
+	parser.process(app);
+
+	const QStringList filenames = parser.positionalArguments();
+	if (filenames.length() > 1) {
+		parser.showHelp();
+		return -1;
+	}
+
+	MainWindow mainWin;
+	if (filenames.length() == 1) {
+		if (!mainWin.loadFile(filenames.at(0))) {
+			return -1;
+		}
+	}
+	mainWin.show();
+
+	return app.exec();
 }
 

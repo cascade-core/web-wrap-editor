@@ -1,5 +1,5 @@
 #!/bin/sh
 
 set -v
-exec ./WebWrapEditor
+exec ./WebWrapEditor example.json
 

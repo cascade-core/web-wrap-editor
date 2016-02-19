@@ -37,6 +37,10 @@ class MainWindow : public QMainWindow
 	protected:
 		void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
+	public slots:
+		bool loadFile(const QString &fileName);
+		bool saveFile(const QString &fileName);
+
 	private slots:
 		void newFile();
 		void open();
@@ -53,8 +57,6 @@ class MainWindow : public QMainWindow
 		void readSettings();
 		void writeSettings();
 		bool maybeSave();
-		void loadFile(const QString &fileName);
-		bool saveFile(const QString &fileName);
 		void setCurrentFile(const QString &fileName);
 		QString strippedName(const QString &fullFileName);
 

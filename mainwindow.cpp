@@ -23,10 +23,10 @@
 
 MainWindow::MainWindow()
 {
+	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
+
 	webView = new QWebView;
 	setCentralWidget(webView);
-	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
-	webView->load(QUrl("qrc:/example_editor.html"));
 
 	webInspectorDock = new QDockWidget(tr("Inspector"));
 	webInspectorDock->setObjectName("webInspectorDock");
@@ -47,6 +47,7 @@ MainWindow::MainWindow()
 	//connect(webView->document(), SIGNAL(contentsChanged()),
 	//		this, SLOT(documentWasModified()));
 
+	webView->load(QUrl("qrc:/example_editor.html"));
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
 }
@@ -109,7 +110,7 @@ bool MainWindow::saveAs()
 
 void MainWindow::about()
 {
-	QMessageBox::about(this, tr("About Application"),
+	QMessageBox::about(this, tr("About WebWrapEditor"),
 			tr("WebWrapEditor " GIT_VERSION "\n"
 				"\n"
 				"Universal editor wrapper, which wraps HTML5-based "
@@ -294,7 +295,7 @@ bool MainWindow::maybeSave()
 	/*
 	if (webView->document()->isModified()) {
 		QMessageBox::StandardButton ret;
-		ret = QMessageBox::warning(this, tr("Application"),
+		ret = QMessageBox::warning(this, QCoreApplication::applicationName(),
 				tr("The document has been modified.\n"
 					"Do you want to save your changes?"),
 				QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
@@ -308,15 +309,15 @@ bool MainWindow::maybeSave()
 }
 
 
-void MainWindow::loadFile(const QString &fileName)
+bool MainWindow::loadFile(const QString &fileName)
 {
 	QFile file(fileName);
 	if (!file.open(QFile::ReadOnly | QFile::Text)) {
-		QMessageBox::warning(this, tr("Application"),
+		QMessageBox::warning(this, QCoreApplication::applicationName(),
 				tr("Cannot read file %1:\n%2.")
 				.arg(fileName)
 				.arg(file.errorString()));
-		return;
+		return false;
 	}
 
 	QTextStream in(&file);
@@ -330,6 +331,8 @@ void MainWindow::loadFile(const QString &fileName)
 
 	setCurrentFile(fileName);
 	statusBar()->showMessage(tr("File loaded"), 2000);
+
+	return true;
 }
 
 
@@ -337,7 +340,7 @@ bool MainWindow::saveFile(const QString &fileName)
 {
 	QFile file(fileName);
 	if (!file.open(QFile::WriteOnly | QFile::Text)) {
-		QMessageBox::warning(this, tr("Application"),
+		QMessageBox::warning(this, QCoreApplication::applicationName(),
 				tr("Cannot write file %1:\n%2.")
 				.arg(fileName)
 				.arg(file.errorString()));
