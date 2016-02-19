@@ -35,10 +35,11 @@ MainWindow::MainWindow()
 	webView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 	webInspectorDock->setWidget(webInspector);
 	addDockWidget(Qt::BottomDockWidgetArea, webInspectorDock);
+	webInspectorDock->hide();
 
 	createActions();
-	createMenus();
 	createToolBars();
+	createMenus();
 	createStatusBar();
 
 	readSettings();
@@ -226,25 +227,27 @@ void MainWindow::createMenus()
 	editMenu->addAction(copyAct);
 	editMenu->addAction(pasteAct);
 
+	viewMenu = createPopupMenu();
+	viewMenu->setTitle(tr("&View"));
+	menuBar()->addMenu(viewMenu);
+
 	menuBar()->addSeparator();
 
 	helpMenu = menuBar()->addMenu(tr("&Help"));
 	helpMenu->addAction(aboutAct);
 	helpMenu->addAction(aboutQtAct);
-	helpMenu->addSeparator();
-	helpMenu->addAction(debugConsoleAct);
 }
 
 
 void MainWindow::createToolBars()
 {
-	fileToolBar = addToolBar(tr("File"));
+	fileToolBar = addToolBar(tr("File toolbar"));
 	fileToolBar->setObjectName("fileToolBar");
 	fileToolBar->addAction(newAct);
 	fileToolBar->addAction(openAct);
 	fileToolBar->addAction(saveAct);
 
-	editToolBar = addToolBar(tr("Edit"));
+	editToolBar = addToolBar(tr("Edit toolbar"));
 	editToolBar->setObjectName("editToolBar");
 	editToolBar->addAction(undoAct);
 	editToolBar->addAction(redoAct);
@@ -253,9 +256,10 @@ void MainWindow::createToolBars()
 	editToolBar->addAction(copyAct);
 	editToolBar->addAction(pasteAct);
 
-	debugToolBar = addToolBar(tr("Debug"));
+	debugToolBar = addToolBar(tr("Debug toolbar"));
 	debugToolBar->setObjectName("debugToolBar");
 	debugToolBar->addAction(debugConsoleAct);
+	debugToolBar->hide();
 }
 
 

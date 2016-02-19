@@ -66,6 +66,7 @@ class MainWindow : public QMainWindow
 
 		QMenu *fileMenu;
 		QMenu *editMenu;
+		QMenu *viewMenu;
 		QMenu *helpMenu;
 		QToolBar *fileToolBar;
 		QToolBar *editToolBar;
