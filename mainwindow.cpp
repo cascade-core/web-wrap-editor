@@ -18,6 +18,7 @@
 #include <QtWidgets>
 #include <QWebView>
 #include <QWebInspector>
+#include <QWebFrame>
 
 #include "mainwindow.h"
 
@@ -27,6 +28,10 @@ MainWindow::MainWindow()
 
 	webView = new QWebView;
 	setCentralWidget(webView);
+
+	// Attach this to JavaScript and keep it attached when page reloads
+	attachToWebPage();
+	connect(webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachToWebPage()));
 
 	webInspectorDock = new QDockWidget(tr("Inspector"));
 	webInspectorDock->setObjectName("webInspectorDock");
@@ -50,6 +55,15 @@ MainWindow::MainWindow()
 	webView->load(QUrl("qrc:/example_editor.html"));
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
+}
+
+
+/**
+ * Attach this object to web page, so it is available from JavaScript.
+ */
+void MainWindow::attachToWebPage()
+{
+	webView->page()->mainFrame()->addToJavaScriptWindowObject(QString("MainWindow"), this);
 }
 
 

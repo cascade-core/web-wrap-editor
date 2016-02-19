@@ -48,6 +48,7 @@ class MainWindow : public QMainWindow
 		bool saveAs();
 		void about();
 		void documentWasModified();
+		void attachToWebPage();
 
 	private:
 		void createActions();
