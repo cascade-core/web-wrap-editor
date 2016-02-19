@@ -23,6 +23,7 @@ MainWindow::MainWindow()
 {
 	textEdit = new QPlainTextEdit;
 	setCentralWidget(textEdit);
+	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
 
 	createActions();
 	createMenus();
@@ -97,9 +98,10 @@ bool MainWindow::saveAs()
 void MainWindow::about()
 {
 	QMessageBox::about(this, tr("About Application"),
-			tr("The <b>Application</b> example demonstrates how to "
-				"write modern GUI applications using Qt, with a menu bar, "
-				"toolbars, and a status bar."));
+			tr("WebWrapEditor " GIT_VERSION "\n"
+				"\n"
+				"Universal editor wrapper, which wraps HTML5-based "
+				"editor with a desktop window."));
 }
 
 
@@ -138,20 +140,17 @@ void MainWindow::createActions()
 
 	cutAct = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
 	cutAct->setShortcuts(QKeySequence::Cut);
-	cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-				"clipboard"));
+	cutAct->setStatusTip(tr("Cut the current selection's contents to the clipboard"));
 	connect(cutAct, SIGNAL(triggered()), textEdit, SLOT(cut()));
 
 	copyAct = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"), this);
 	copyAct->setShortcuts(QKeySequence::Copy);
-	copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-				"clipboard"));
+	copyAct->setStatusTip(tr("Copy the current selection's contents to the clipboard"));
 	connect(copyAct, SIGNAL(triggered()), textEdit, SLOT(copy()));
 
 	pasteAct = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
 	pasteAct->setShortcuts(QKeySequence::Paste);
-	pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-				"selection"));
+	pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
 	connect(pasteAct, SIGNAL(triggered()), textEdit, SLOT(paste()));
 
 	aboutAct = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
