@@ -21,9 +21,10 @@
 
 MainWindow::MainWindow()
 {
-	textEdit = new QPlainTextEdit;
-	setCentralWidget(textEdit);
+	webView = new QWebView;
+	setCentralWidget(webView);
 	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
+	webView->load(QUrl("qrc:/example_editor.html"));
 
 	createActions();
 	createMenus();
@@ -32,8 +33,8 @@ MainWindow::MainWindow()
 
 	readSettings();
 
-	connect(textEdit->document(), SIGNAL(contentsChanged()),
-			this, SLOT(documentWasModified()));
+	//connect(webView->document(), SIGNAL(contentsChanged()),
+	//		this, SLOT(documentWasModified()));
 
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
@@ -54,7 +55,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::newFile()
 {
 	if (maybeSave()) {
-		textEdit->clear();
+		//webView->clear();
 		setCurrentFile("");
 	}
 }
@@ -107,7 +108,7 @@ void MainWindow::about()
 
 void MainWindow::documentWasModified()
 {
-	setWindowModified(textEdit->document()->isModified());
+	//setWindowModified(webView->document()->isModified());
 }
 
 
@@ -141,27 +142,27 @@ void MainWindow::createActions()
 	undoAct = new QAction(QIcon::fromTheme("edit-undo"), tr("&Undo"), this);
 	undoAct->setShortcuts(QKeySequence::Undo);
 	undoAct->setStatusTip(tr("Undo recent action"));
-	connect(undoAct, SIGNAL(triggered()), textEdit, SLOT(undo()));
+	//connect(undoAct, SIGNAL(triggered()), webView, SLOT(undo()));
 
 	redoAct = new QAction(QIcon::fromTheme("edit-redo"), tr("&Redo"), this);
 	redoAct->setShortcuts(QKeySequence::Redo);
 	redoAct->setStatusTip(tr("Redo recent action"));
-	connect(redoAct, SIGNAL(triggered()), textEdit, SLOT(redo()));
+	//connect(redoAct, SIGNAL(triggered()), webView, SLOT(redo()));
 
 	cutAct = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
 	cutAct->setShortcuts(QKeySequence::Cut);
 	cutAct->setStatusTip(tr("Cut the current selection's contents to the clipboard"));
-	connect(cutAct, SIGNAL(triggered()), textEdit, SLOT(cut()));
+	//connect(cutAct, SIGNAL(triggered()), webView, SLOT(cut()));
 
 	copyAct = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"), this);
 	copyAct->setShortcuts(QKeySequence::Copy);
 	copyAct->setStatusTip(tr("Copy the current selection's contents to the clipboard"));
-	connect(copyAct, SIGNAL(triggered()), textEdit, SLOT(copy()));
+	//connect(copyAct, SIGNAL(triggered()), webView, SLOT(copy()));
 
 	pasteAct = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
 	pasteAct->setShortcuts(QKeySequence::Paste);
 	pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
-	connect(pasteAct, SIGNAL(triggered()), textEdit, SLOT(paste()));
+	//connect(pasteAct, SIGNAL(triggered()), webView, SLOT(paste()));
 
 	aboutAct = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 	aboutAct->setStatusTip(tr("Show the application's About box"));
@@ -171,21 +172,23 @@ void MainWindow::createActions()
 	aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
+	/*
 	cutAct->setEnabled(false);
-	connect(textEdit, SIGNAL(copyAvailable(bool)),
+	connect(webView, SIGNAL(copyAvailable(bool)),
 			cutAct, SLOT(setEnabled(bool)));
 
 	copyAct->setEnabled(false);
-	connect(textEdit, SIGNAL(copyAvailable(bool)),
+	connect(webView, SIGNAL(copyAvailable(bool)),
 			copyAct, SLOT(setEnabled(bool)));
 
 	undoAct->setEnabled(false);
-	connect(textEdit, SIGNAL(undoAvailable(bool)),
+	connect(webView, SIGNAL(undoAvailable(bool)),
 			undoAct, SLOT(setEnabled(bool)));
 
 	redoAct->setEnabled(false);
-	connect(textEdit, SIGNAL(redoAvailable(bool)),
+	connect(webView, SIGNAL(redoAvailable(bool)),
 			redoAct, SLOT(setEnabled(bool)));
+	*/
 }
 
 
@@ -258,7 +261,8 @@ void MainWindow::writeSettings()
 
 bool MainWindow::maybeSave()
 {
-	if (textEdit->document()->isModified()) {
+	/*
+	if (webView->document()->isModified()) {
 		QMessageBox::StandardButton ret;
 		ret = QMessageBox::warning(this, tr("Application"),
 				tr("The document has been modified.\n"
@@ -269,6 +273,7 @@ bool MainWindow::maybeSave()
 		else if (ret == QMessageBox::Cancel)
 			return false;
 	}
+	*/
 	return true;
 }
 
@@ -288,7 +293,7 @@ void MainWindow::loadFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-	textEdit->setPlainText(in.readAll());
+	//webView->setPlainText(in.readAll());
 #ifndef QT_NO_CURSOR
 	QApplication::restoreOverrideCursor();
 #endif
@@ -313,7 +318,7 @@ bool MainWindow::saveFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-	out << textEdit->toPlainText();
+	//out << webView->toPlainText();
 #ifndef QT_NO_CURSOR
 	QApplication::restoreOverrideCursor();
 #endif
@@ -327,7 +332,7 @@ bool MainWindow::saveFile(const QString &fileName)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
 	curFile = fileName;
-	textEdit->document()->setModified(false);
+	//webView->document()->setModified(false);
 	setWindowModified(false);
 
 	QString shownName = curFile;

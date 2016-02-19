@@ -1,4 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+	<file>example_editor.html</file>
+	<file>example_editor.css</file>
 </qresource>
 </RCC>

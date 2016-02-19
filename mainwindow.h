@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QWebView>
 
 class QAction;
 class QMenu;
@@ -55,7 +56,7 @@ class MainWindow : public QMainWindow
 		void setCurrentFile(const QString &fileName);
 		QString strippedName(const QString &fullFileName);
 
-		QPlainTextEdit *textEdit;
+		QWebView *webView;
 		QString curFile;
 
 		QMenu *fileMenu;
