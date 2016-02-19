@@ -9,22 +9,32 @@ html, body {
 	font-size: 1em;
 }
 
+body {
+	position: absolute;
+	top: 0.5em;
+	left: 0.5em;
+	right: 0.5em;
+	bottom: 0.5em;
+}
+
 div#header {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	right: 0px;
-	height: 3em;
-	padding: 1em;
+	height: 2em;
+	padding: 0.5em;
 }
 
 textarea {
 	display: block;
 	position: absolute;
-	top: 3em;
-	left: 0.5em;
-	right: 0.5em;
-	bottom: 0.5em;
+	top: 2.5em;
+	left: 0em;
+	right: 0em;
+	bottom: 0em;
+	width: 100%;
+	height: auto;
 	border: 1px solid #aaa;
 	padding: 0.5em;
 	color: #000;
