@@ -12,9 +12,9 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DGIT_VERSION=\"v0.0-2-g9232a40\" -DQT_NO_DEBUG -DQT_UITOOLS_LIB -DQT_UIPLUGIN_LIB -DQT_WEBKITWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_WEBKIT_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -DQT_CORE_LIB
-CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+DEFINES       = -DGIT_VERSION=\"v0.0-8-g21ca66f\" -DQT_UITOOLS_LIB -DQT_UIPLUGIN_LIB -DQT_WEBKITWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_WEBKIT_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -DQT_CORE_LIB
+CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtUiTools -isystem /usr/include/x86_64-linux-gnu/qt5/QtUiPlugin -isystem /usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtWebKit -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtScript -isystem /usr/include/x86_64-linux-gnu/qt5/QtScriptTools -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -Ibuild -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
@@ -35,7 +35,7 @@ COMPRESS      = gzip -9f
 DISTNAME      = WebWrapEditor1.0.0
 DISTDIR = /home/pepik/prg/qt/WebWrapEditor/build/WebWrapEditor1.0.0
 LINK          = g++
-LFLAGS        = -m64 -Wl,-O1 -Wl,-rpath-link,/usr/lib/x86_64-linux-gnu
+LFLAGS        = -m64 -Wl,-rpath-link,/usr/lib/x86_64-linux-gnu
 LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5UiTools -lQt5WebKitWidgets -lQt5Widgets -lQt5WebKit -lQt5Gui -lQt5Network -lQt5Script -lQt5ScriptTools -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
@@ -49,12 +49,16 @@ OBJECTS_DIR   = build/
 ####### Files
 
 SOURCES       = main.cpp \
-		mainwindow.cpp build/qrc_WebWrapEditor.cpp \
-		build/moc_mainwindow.cpp
+		mainwindow.cpp \
+		scriptproxy.cpp build/qrc_WebWrapEditor.cpp \
+		build/moc_mainwindow.cpp \
+		build/moc_scriptproxy.cpp
 OBJECTS       = build/main.o \
 		build/mainwindow.o \
+		build/scriptproxy.o \
 		build/qrc_WebWrapEditor.o \
-		build/moc_mainwindow.o
+		build/moc_mainwindow.o \
+		build/moc_scriptproxy.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -209,8 +213,10 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		WebWrapEditor.pro mainwindow.h main.cpp \
-		mainwindow.cpp
+		WebWrapEditor.pro mainwindow.h \
+		scriptproxy.h main.cpp \
+		mainwindow.cpp \
+		scriptproxy.cpp
 QMAKE_TARGET  = WebWrapEditor
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = WebWrapEditor
@@ -587,8 +593,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents WebWrapEditor.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h scriptproxy.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp scriptproxy.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -617,11 +623,14 @@ build/qrc_WebWrapEditor.cpp: WebWrapEditor.qrc \
 		example_editor.html
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name WebWrapEditor WebWrapEditor.qrc -o build/qrc_WebWrapEditor.cpp
 
-compiler_moc_header_make_all: build/moc_mainwindow.cpp
+compiler_moc_header_make_all: build/moc_mainwindow.cpp build/moc_scriptproxy.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_mainwindow.cpp
+	-$(DEL_FILE) build/moc_mainwindow.cpp build/moc_scriptproxy.cpp
 build/moc_mainwindow.cpp: mainwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/pepik/prg/qt/WebWrapEditor -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtUiTools -I/usr/include/x86_64-linux-gnu/qt5/QtUiPlugin -I/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtWebKit -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtScript -I/usr/include/x86_64-linux-gnu/qt5/QtScriptTools -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o build/moc_mainwindow.cpp
+
+build/moc_scriptproxy.cpp: scriptproxy.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/pepik/prg/qt/WebWrapEditor -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtUiTools -I/usr/include/x86_64-linux-gnu/qt5/QtUiPlugin -I/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtWebKit -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtScript -I/usr/include/x86_64-linux-gnu/qt5/QtScriptTools -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include scriptproxy.h -o build/moc_scriptproxy.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -640,14 +649,21 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean
 build/main.o: main.cpp mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o main.cpp
 
-build/mainwindow.o: mainwindow.cpp mainwindow.h
+build/mainwindow.o: mainwindow.cpp mainwindow.h \
+		scriptproxy.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/mainwindow.o mainwindow.cpp
+
+build/scriptproxy.o: scriptproxy.cpp scriptproxy.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/scriptproxy.o scriptproxy.cpp
 
 build/qrc_WebWrapEditor.o: build/qrc_WebWrapEditor.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_WebWrapEditor.o build/qrc_WebWrapEditor.cpp
 
 build/moc_mainwindow.o: build/moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_mainwindow.o build/moc_mainwindow.cpp
+
+build/moc_scriptproxy.o: build/moc_scriptproxy.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_scriptproxy.o build/moc_scriptproxy.cpp
 
 ####### Install
 

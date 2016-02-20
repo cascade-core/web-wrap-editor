@@ -1,10 +1,12 @@
 QT += widgets uitools webkitwidgets script scripttools
 
+CONFIG += debug
+
 GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
 
-SOURCES = main.cpp mainwindow.cpp
-HEADERS = mainwindow.h
+SOURCES = main.cpp mainwindow.cpp scriptproxy.cpp
+HEADERS = mainwindow.h scriptproxy.h
 RESOURCES = WebWrapEditor.qrc
 
 OBJECTS_DIR=build

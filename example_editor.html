@@ -4,11 +4,34 @@
 	<title>Example Editor</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link rel="stylesheet" href="example_editor.css" type="text/css" title="Default">
-	<script type="text/javascript"></script>
 </head>
 <body>
 	<div id="header">Example editor.</div>
-	<textarea autofocus></textarea>
+	<textarea id="editor" autofocus></textarea>
+	<script type="text/javascript">
+
+		var editor = document.getElementById("editor");
+		editor.value = WebWrap.editorData;
+
+		// Watch for change of editor data (file loaded or something)
+		WebWrap["editorDataChanged(QString)"].connect(function(data) {
+			editor.value = data;
+		});
+
+		// Update data when changed by editor
+		editor.onchange = editor.onkeyup = function(event) {
+			if (WebWrap.editorData != editor.value) {
+				WebWrap.editorData = editor.value;
+				WebWrap.modified = true;
+			}
+		};
+
+		// Watch for file name change (optional)
+		WebWrap["fileNameChanged(QString)"].connect(function(fn) {
+			//alert('New file name: ' + fn);
+		});
+
+	</script>
 </body>
 </html>
 

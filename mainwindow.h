@@ -26,6 +26,7 @@ class QPlainTextEdit;
 class QWebView;
 class QWebInspector;
 class QDockWidget;
+class ScriptProxy;
 
 class MainWindow : public QMainWindow
 {
@@ -64,6 +65,7 @@ class MainWindow : public QMainWindow
 		QWebView *webView;
 		QDockWidget *webInspectorDock;
 		QWebInspector *webInspector;
+		ScriptProxy *scriptProxy;
 
 		QString curFile;
 

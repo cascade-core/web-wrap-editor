@@ -21,6 +21,7 @@
 #include <QWebFrame>
 
 #include "mainwindow.h"
+#include "scriptproxy.h"
 
 MainWindow::MainWindow()
 {
@@ -28,10 +29,6 @@ MainWindow::MainWindow()
 
 	webView = new QWebView;
 	setCentralWidget(webView);
-
-	// Attach this to JavaScript and keep it attached when page reloads
-	attachToWebPage();
-	connect(webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachToWebPage()));
 
 	webInspectorDock = new QDockWidget(tr("Inspector"));
 	webInspectorDock->setObjectName("webInspectorDock");
@@ -42,6 +39,13 @@ MainWindow::MainWindow()
 	addDockWidget(Qt::BottomDockWidgetArea, webInspectorDock);
 	webInspectorDock->hide();
 
+	// Attach this to JavaScript and keep it attached when page reloads
+	scriptProxy = new ScriptProxy(this);
+	connect(scriptProxy, SIGNAL(isModifiedChanged(bool)), this, SLOT(documentWasModified()));
+	attachToWebPage();
+	connect(webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachToWebPage()));
+
+	// Create GUI
 	createActions();
 	createToolBars();
 	createMenus();
@@ -49,12 +53,10 @@ MainWindow::MainWindow()
 
 	readSettings();
 
-	//connect(webView->document(), SIGNAL(contentsChanged()),
-	//		this, SLOT(documentWasModified()));
-
-	webView->load(QUrl("qrc:/example_editor.html"));
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
+
+	webView->load(QUrl("qrc:/example_editor.html"));
 }
 
 
@@ -63,7 +65,8 @@ MainWindow::MainWindow()
  */
 void MainWindow::attachToWebPage()
 {
-	webView->page()->mainFrame()->addToJavaScriptWindowObject(QString("MainWindow"), this);
+	scriptProxy->setObjectName("ScriptProxy");
+	webView->page()->mainFrame()->addToJavaScriptWindowObject(QString("WebWrap"), scriptProxy);
 }
 
 
@@ -81,7 +84,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::newFile()
 {
 	if (maybeSave()) {
-		//webView->clear();
+		scriptProxy->clear();
 		setCurrentFile("");
 	}
 }
@@ -134,7 +137,7 @@ void MainWindow::about()
 
 void MainWindow::documentWasModified()
 {
-	//setWindowModified(webView->document()->isModified());
+	setWindowModified(scriptProxy->isModified());
 }
 
 
@@ -326,6 +329,7 @@ bool MainWindow::maybeSave()
 bool MainWindow::loadFile(const QString &fileName)
 {
 	QFile file(fileName);
+
 	if (!file.open(QFile::ReadOnly | QFile::Text)) {
 		QMessageBox::warning(this, QCoreApplication::applicationName(),
 				tr("Cannot read file %1:\n%2.")
@@ -334,15 +338,20 @@ bool MainWindow::loadFile(const QString &fileName)
 		return false;
 	}
 
-	QTextStream in(&file);
 #ifndef QT_NO_CURSOR
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-	//webView->setPlainText(in.readAll());
+
+	// Create new script proxy and populate it
+	QTextStream in(&file);
+	scriptProxy->clear();
+	scriptProxy->setFileName(fileName);
+	scriptProxy->setEditorData(in.readAll());
+	scriptProxy->setModified(false);
+
 #ifndef QT_NO_CURSOR
 	QApplication::restoreOverrideCursor();
 #endif
-
 	setCurrentFile(fileName);
 	statusBar()->showMessage(tr("File loaded"), 2000);
 
@@ -365,7 +374,7 @@ bool MainWindow::saveFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-	//out << webView->toPlainText();
+	out << scriptProxy->editorData();
 #ifndef QT_NO_CURSOR
 	QApplication::restoreOverrideCursor();
 #endif
@@ -379,7 +388,7 @@ bool MainWindow::saveFile(const QString &fileName)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
 	curFile = fileName;
-	//webView->document()->setModified(false);
+	scriptProxy->setModified(false);
 	setWindowModified(false);
 
 	QString shownName = curFile;
