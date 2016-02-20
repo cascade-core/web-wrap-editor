@@ -14,7 +14,7 @@
 		editor.value = WebWrap.editorData;
 
 		// Watch for change of editor data (file loaded or something)
-		WebWrap["editorDataChanged(QString)"].connect(function(data) {
+		WebWrap.editorDataChanged.connect(function(data) {
 			editor.value = data;
 		});
 
@@ -27,31 +27,31 @@
 		};
 
 		// Watch for file name change (optional)
-		WebWrap["fileNameChanged(QString)"].connect(function(fn) {
+		WebWrap.fileNameChanged.connect(function(fn) {
 			//alert('New file name: ' + fn);
 		});
 
-		WebWrap["undo()"].connect(function() {
+		WebWrap.undo.connect(function() {
 			console.log('Undo!');
 		});
 		WebWrap.undoAvailable(true);
 
-		WebWrap["redo()"].connect(function() {
+		WebWrap.redo.connect(function() {
 			console.log('Redo!');
 		});
 		WebWrap.redoAvailable(true);
 
-		WebWrap["cut()"].connect(function() {
+		WebWrap.cut.connect(function() {
 			console.log('Cut!');
 		});
 		WebWrap.cutAvailable(true);
 
-		WebWrap["copy()"].connect(function() {
+		WebWrap.copy.connect(function() {
 			console.log('Copy!');
 		});
 		WebWrap.copyAvailable(true);
 
-		WebWrap["paste()"].connect(function() {
+		WebWrap.paste.connect(function() {
 			console.log('Paste!');
 		});
 		WebWrap.pasteAvailable(true);

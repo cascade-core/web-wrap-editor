@@ -306,8 +306,7 @@ void MainWindow::writeSettings()
 
 bool MainWindow::maybeSave()
 {
-	/*
-	if (webView->document()->isModified()) {
+	if (scriptProxy->isModified()) {
 		QMessageBox::StandardButton ret;
 		ret = QMessageBox::warning(this, QCoreApplication::applicationName(),
 				tr("The document has been modified.\n"
@@ -318,7 +317,6 @@ bool MainWindow::maybeSave()
 		else if (ret == QMessageBox::Cancel)
 			return false;
 	}
-	*/
 	return true;
 }
 
