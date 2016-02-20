@@ -45,6 +45,16 @@ class ScriptProxy : public QObject
 		void isModifiedChanged(bool);
 		void fileNameChanged(const QString &);
 		void editorDataChanged(const QString &);
+		void cut();
+		void copy();
+		void paste();
+		void undo();
+		void redo();
+		void cutAvailable(bool);
+		void copyAvailable(bool);
+		void pasteAvailable(bool);
+		void undoAvailable(bool);
+		void redoAvailable(bool);
 
 	private:
 		bool m_modified;

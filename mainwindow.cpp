@@ -171,27 +171,27 @@ void MainWindow::createActions()
 	undoAct = new QAction(QIcon::fromTheme("edit-undo"), tr("&Undo"), this);
 	undoAct->setShortcuts(QKeySequence::Undo);
 	undoAct->setStatusTip(tr("Undo recent action"));
-	//connect(undoAct, SIGNAL(triggered()), webView, SLOT(undo()));
+	connect(undoAct, SIGNAL(triggered()), scriptProxy, SIGNAL(undo()));
 
 	redoAct = new QAction(QIcon::fromTheme("edit-redo"), tr("&Redo"), this);
 	redoAct->setShortcuts(QKeySequence::Redo);
 	redoAct->setStatusTip(tr("Redo recent action"));
-	//connect(redoAct, SIGNAL(triggered()), webView, SLOT(redo()));
+	connect(redoAct, SIGNAL(triggered()), scriptProxy, SIGNAL(redo()));
 
 	cutAct = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
 	cutAct->setShortcuts(QKeySequence::Cut);
 	cutAct->setStatusTip(tr("Cut the current selection's contents to the clipboard"));
-	//connect(cutAct, SIGNAL(triggered()), webView, SLOT(cut()));
+	connect(cutAct, SIGNAL(triggered()), scriptProxy, SIGNAL(cut()));
 
 	copyAct = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"), this);
 	copyAct->setShortcuts(QKeySequence::Copy);
 	copyAct->setStatusTip(tr("Copy the current selection's contents to the clipboard"));
-	//connect(copyAct, SIGNAL(triggered()), webView, SLOT(copy()));
+	connect(copyAct, SIGNAL(triggered()), scriptProxy, SIGNAL(copy()));
 
 	pasteAct = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
 	pasteAct->setShortcuts(QKeySequence::Paste);
 	pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
-	//connect(pasteAct, SIGNAL(triggered()), webView, SLOT(paste()));
+	connect(pasteAct, SIGNAL(triggered()), scriptProxy, SIGNAL(paste()));
 
 	aboutAct = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 	aboutAct->setStatusTip(tr("Show the application's About box"));
@@ -207,23 +207,20 @@ void MainWindow::createActions()
 	debugConsoleAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_I));
 	debugConsoleAct->setStatusTip(tr("Show web inspector"));
 
-	/*
 	cutAct->setEnabled(false);
-	connect(webView, SIGNAL(copyAvailable(bool)),
-			cutAct, SLOT(setEnabled(bool)));
+	connect(scriptProxy, SIGNAL(cutAvailable(bool)), cutAct, SLOT(setEnabled(bool)));
 
 	copyAct->setEnabled(false);
-	connect(webView, SIGNAL(copyAvailable(bool)),
-			copyAct, SLOT(setEnabled(bool)));
+	connect(scriptProxy, SIGNAL(copyAvailable(bool)), copyAct, SLOT(setEnabled(bool)));
+
+	pasteAct->setEnabled(false);
+	connect(scriptProxy, SIGNAL(pasteAvailable(bool)), pasteAct, SLOT(setEnabled(bool)));
 
 	undoAct->setEnabled(false);
-	connect(webView, SIGNAL(undoAvailable(bool)),
-			undoAct, SLOT(setEnabled(bool)));
+	connect(scriptProxy, SIGNAL(undoAvailable(bool)), undoAct, SLOT(setEnabled(bool)));
 
 	redoAct->setEnabled(false);
-	connect(webView, SIGNAL(redoAvailable(bool)),
-			redoAct, SLOT(setEnabled(bool)));
-	*/
+	connect(scriptProxy, SIGNAL(redoAvailable(bool)), redoAct, SLOT(setEnabled(bool)));
 }
 
 

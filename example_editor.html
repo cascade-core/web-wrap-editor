@@ -31,6 +31,30 @@
 			//alert('New file name: ' + fn);
 		});
 
+		WebWrap["undo()"].connect(function() {
+			console.log('Undo!');
+		});
+		WebWrap.undoAvailable(true);
+
+		WebWrap["redo()"].connect(function() {
+			console.log('Redo!');
+		});
+		WebWrap.redoAvailable(true);
+
+		WebWrap["cut()"].connect(function() {
+			console.log('Cut!');
+		});
+		WebWrap.cutAvailable(true);
+
+		WebWrap["copy()"].connect(function() {
+			console.log('Copy!');
+		});
+		WebWrap.copyAvailable(true);
+
+		WebWrap["paste()"].connect(function() {
+			console.log('Paste!');
+		});
+		WebWrap.pasteAvailable(true);
 	</script>
 </body>
 </html>
