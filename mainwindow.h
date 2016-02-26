@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QHash>
 
 class QAction;
 class QMenu;
@@ -51,6 +52,14 @@ class MainWindow : public QMainWindow
 		void documentWasModified();
 		void attachToWebPage();
 
+		QAction *createToolAction(const QString &name, const QString &label, const QString &iconName,
+				const QString &shortcutKey, const QString &statusTip, bool isCheckable, bool isOnToolbar);
+		void toolActionTriggered(bool isChecked = false);
+		void toolAvailable(const QString &name, bool isAvailable);
+
+	signals:
+		void toolAction(const QString &name, bool isChecked);
+
 	private:
 		void createActions();
 		void createMenus();
@@ -72,9 +81,11 @@ class MainWindow : public QMainWindow
 		QMenu *fileMenu;
 		QMenu *editMenu;
 		QMenu *viewMenu;
+		QMenu *toolMenu;
 		QMenu *helpMenu;
 		QToolBar *fileToolBar;
 		QToolBar *editToolBar;
+		QToolBar *toolToolBar;
 		QToolBar *debugToolBar;
 		QAction *newAct;
 		QAction *openAct;
@@ -89,6 +100,8 @@ class MainWindow : public QMainWindow
 		QAction *aboutAct;
 		QAction *aboutQtAct;
 		QAction *debugConsoleAct;
+
+		QHash<QString, QAction*> toolActions;
 };
 
 #endif

@@ -55,6 +55,24 @@
 			console.log('Paste!');
 		});
 		WebWrap.pasteAvailable(true);
+
+		// Create a tool action
+		WebWrap.createToolAction("enable-hello", "Enable hello", "face-smile", "Ctrl+J", "Allow to say hello.", true, true);
+		WebWrap.createToolAction("hello", "Say hello", "face-wink", "Ctrl+H", "Simply say \"Hello\".", false, true);
+		WebWrap.toolAction.connect(function(actionName, isChecked) {
+			console.log('Action triggered: %s(%s)', actionName, isChecked);
+
+			switch (actionName) {
+				case "enable-hello":
+					WebWrap.toolAvailable("hello", isChecked);
+					break;
+				case "hello":
+					alert("Hello!");
+					break;
+			}
+		});
+		WebWrap.toolAvailable("enable-hello", true);
+		WebWrap.toolAvailable("hello", false);
 	</script>
 </body>
 </html>

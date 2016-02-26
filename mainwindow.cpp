@@ -28,6 +28,7 @@ MainWindow::MainWindow()
 	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
 
 	webView = new QWebView;
+	webView->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
 	setCentralWidget(webView);
 
 	webInspectorDock = new QDockWidget(tr("Inspector"));
@@ -50,6 +51,8 @@ MainWindow::MainWindow()
 	createToolBars();
 	createMenus();
 	createStatusBar();
+
+	connect(webView, SIGNAL(statusBarMessage(QString)), statusBar(), SLOT(showMessage(QString)));
 
 	readSettings();
 
@@ -221,6 +224,11 @@ void MainWindow::createActions()
 
 	redoAct->setEnabled(false);
 	connect(scriptProxy, SIGNAL(redoAvailable(bool)), redoAct, SLOT(setEnabled(bool)));
+
+	connect(scriptProxy, SIGNAL(createToolAction(QString, QString, QString, QString, QString, bool, bool)),
+			this, SLOT(createToolAction(QString, QString, QString, QString, QString, bool, bool)));
+	connect(this, SIGNAL(toolAction(QString, bool)), scriptProxy, SIGNAL(toolAction(QString, bool)));
+	connect(scriptProxy, SIGNAL(toolAvailable(QString, bool)), this, SLOT(toolAvailable(QString, bool)));
 }
 
 
@@ -245,6 +253,8 @@ void MainWindow::createMenus()
 	viewMenu = createPopupMenu();
 	viewMenu->setTitle(tr("&View"));
 	menuBar()->addMenu(viewMenu);
+
+	toolMenu = menuBar()->addMenu(tr("&Tools"));
 
 	menuBar()->addSeparator();
 
@@ -271,6 +281,9 @@ void MainWindow::createToolBars()
 	editToolBar->addAction(copyAct);
 	editToolBar->addAction(pasteAct);
 
+	toolToolBar = addToolBar(tr("Tools toolbar"));
+	toolToolBar->setObjectName("toolToolBar");
+
 	debugToolBar = addToolBar(tr("Debug toolbar"));
 	debugToolBar->setObjectName("debugToolBar");
 	debugToolBar->addAction(debugConsoleAct);
@@ -281,6 +294,44 @@ void MainWindow::createToolBars()
 void MainWindow::createStatusBar()
 {
 	statusBar()->showMessage(tr("Ready"));
+}
+
+
+QAction *MainWindow::createToolAction(const QString &name, const QString &label, const QString &iconName,
+		const QString &shortcutKey, const QString &statusTip, bool isCheckable, bool isOnToolbar)
+{
+	QAction *act = new QAction(QIcon::fromTheme(iconName), label, this);
+	act->setObjectName(name);
+	act->setEnabled(false);
+	act->setShortcut(QKeySequence(shortcutKey));
+	act->setStatusTip(statusTip);
+	act->setCheckable(isCheckable);
+	if (toolActions[name]) {
+		delete toolActions[name];
+	}
+	toolActions[name] = act;
+
+	toolMenu->addAction(act);
+	if (isOnToolbar) {
+		toolToolBar->addAction(act);
+	}
+
+	connect(act, SIGNAL(triggered(bool)), this, SLOT(toolActionTriggered(bool)));
+	return act;
+}
+
+void MainWindow::toolActionTriggered(bool isChecked)
+{
+	QObject *src = sender();
+	emit toolAction(src->objectName(), isChecked);
+}
+
+void MainWindow::toolAvailable(const QString &name, bool isAvailable)
+{
+	QAction *act = toolActions.value(name);
+	if (act) {
+		act->setEnabled(isAvailable);
+	}
 }
 
 

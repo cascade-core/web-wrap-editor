@@ -19,6 +19,8 @@
 
 #include <QObject>
 
+class QAction;
+
 /**
  * Proxy between Javascript in WebView (available as `WebWrap`) and MainWindow.
  */
@@ -55,6 +57,11 @@ class ScriptProxy : public QObject
 		void pasteAvailable(bool);
 		void undoAvailable(bool);
 		void redoAvailable(bool);
+
+		void createToolAction(const QString &name, const QString &label, const QString &iconName,
+				const QString &shortcutKey, const QString &statusTip, bool isToggle, bool isOnToolbar);
+		void toolAction(const QString &name, bool isChecked);
+		void toolAvailable(const QString &name, bool isAvailable);
 
 	private:
 		bool m_modified;
