@@ -52,6 +52,10 @@ class MainWindow : public QMainWindow
 		void documentWasModified();
 		void attachToWebPage();
 
+		void loadEditor(const QString &glueFileName);
+
+		void openSettingsDialog();
+
 		QAction *createToolAction(const QString &name, const QString &label, const QString &iconName,
 				const QString &shortcutKey, const QString &statusTip, bool isCheckable, bool isOnToolbar);
 		void toolActionTriggered(bool isChecked = false);
@@ -93,6 +97,7 @@ class MainWindow : public QMainWindow
 		QAction *openAct;
 		QAction *saveAct;
 		QAction *saveAsAct;
+		QAction *settingsAct;
 		QAction *exitAct;
 		QAction *undoAct;
 		QAction *redoAct;

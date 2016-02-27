@@ -22,6 +22,7 @@
 
 #include "mainwindow.h"
 #include "scriptproxy.h"
+#include "settingsdialog.h"
 
 MainWindow::MainWindow()
 {
@@ -60,15 +61,7 @@ MainWindow::MainWindow()
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
 
-	// Calculate initial file
-	QString path;
-	path.append(editorBaseDir);
-	if (!path.endsWith('/')) {
-		path.append('/');
-	}
-	path.append("null.html");
-	webView->load(QUrl::fromLocalFile(path));
-	statusBar()->showMessage(path);
+	loadEditor("null.html");
 }
 
 
@@ -79,6 +72,19 @@ void MainWindow::attachToWebPage()
 {
 	scriptProxy->setObjectName("ScriptProxy");
 	webView->page()->mainFrame()->addToJavaScriptWindowObject(QString("WebWrap"), scriptProxy);
+}
+
+
+void MainWindow::loadEditor(const QString &glueFileName)
+{
+	QString path;
+	path.append(editorBaseDir);
+	if (!path.endsWith('/')) {
+		path.append('/');
+	}
+	path.append(glueFileName);
+	webView->load(QUrl::fromLocalFile(path));
+	statusBar()->showMessage(tr("Loading editor (%1) ...").arg(path));
 }
 
 
@@ -180,6 +186,11 @@ void MainWindow::createActions()
 	exitAct->setStatusTip(tr("Exit the application"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
+	settingsAct = new QAction(QIcon::fromTheme("preferences-other"), tr("&Settings..."), this);
+	settingsAct->setShortcuts(QKeySequence::Preferences);
+	settingsAct->setStatusTip(tr("Open a settings dialog..."));
+	connect(settingsAct, SIGNAL(triggered()), this, SLOT(openSettingsDialog()));
+
 	undoAct = new QAction(QIcon::fromTheme("edit-undo"), tr("&Undo"), this);
 	undoAct->setShortcuts(QKeySequence::Undo);
 	undoAct->setStatusTip(tr("Undo recent action"));
@@ -249,6 +260,8 @@ void MainWindow::createMenus()
 	fileMenu->addAction(openAct);
 	fileMenu->addAction(saveAct);
 	fileMenu->addAction(saveAsAct);
+	fileMenu->addSeparator();
+	fileMenu->addAction(settingsAct);
 	fileMenu->addSeparator();
 	fileMenu->addAction(exitAct);
 
@@ -359,6 +372,16 @@ void MainWindow::toolAvailable(const QString &name, bool isAvailable)
 }
 
 
+void MainWindow::openSettingsDialog()
+{
+	writeSettings();
+	SettingsDialog sd(this);
+	if (sd.exec()) {
+		readSettings();
+		webView->reload();
+	}
+}
+
 void MainWindow::readSettings()
 {
 	QSettings settings("WebWrapEditor", "WebWrapEditor");
@@ -375,9 +398,6 @@ void MainWindow::readSettings()
 void MainWindow::writeSettings()
 {
 	QSettings settings("WebWrapEditor", "WebWrapEditor");
-	settings.beginGroup("htmlEditors");
-	settings.setValue("baseDir", editorBaseDir);
-	settings.endGroup();
 	settings.beginGroup("mainWindow");
 	settings.setValue("geometry", saveGeometry());
 	settings.setValue("state", saveState());
@@ -429,7 +449,7 @@ bool MainWindow::loadFile(const QString &fileName)
 	QApplication::restoreOverrideCursor();
 #endif
 	setCurrentFile(fileName);
-	statusBar()->showMessage(tr("File loaded"), 2000);
+	//statusBar()->showMessage(tr("File loaded"), 2000);
 
 	return true;
 }
