@@ -257,6 +257,7 @@ void MainWindow::createMenus()
 	menuBar()->addMenu(viewMenu);
 
 	toolMenu = menuBar()->addMenu(tr("&Tools"));
+	toolMenu->setEnabled(false);
 
 	menuBar()->addSeparator();
 
@@ -319,6 +320,9 @@ QAction *MainWindow::createToolAction(const QString &name, const QString &label,
 	}
 
 	connect(act, SIGNAL(triggered(bool)), this, SLOT(toolActionTriggered(bool)));
+
+	toolMenu->setEnabled(true);
+
 	return act;
 }
 
