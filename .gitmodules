@@ -1,0 +1,9 @@
+[submodule "editor/smalldb-editor"]
+	path = editor/smalldb-editor
+	url = ../smalldb-editor.git
+[submodule "editor/block-editor"]
+	path = editor/block-editor
+	url = ../block-editor.git
+[submodule "editor/duf-editor"]
+	path = editor/duf-editor
+	url = ../duf-editor.git
