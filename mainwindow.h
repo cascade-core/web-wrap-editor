@@ -27,6 +27,7 @@ class QPlainTextEdit;
 class QWebView;
 class QWebInspector;
 class QDockWidget;
+class QProgressBar;
 class ScriptProxy;
 
 class MainWindow : public QMainWindow
@@ -53,6 +54,7 @@ class MainWindow : public QMainWindow
 		void attachToWebPage();
 
 		void loadEditor(const QString &glueFileName);
+		void loadFinished(bool ok);
 
 		void openSettingsDialog();
 
@@ -109,6 +111,8 @@ class MainWindow : public QMainWindow
 		QAction *debugConsoleAct;
 
 		QHash<QString, QAction*> toolActions;
+
+		QProgressBar *statusProgressBar;
 };
 
 #endif

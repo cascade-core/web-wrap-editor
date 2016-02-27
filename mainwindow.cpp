@@ -19,6 +19,7 @@
 #include <QWebView>
 #include <QWebInspector>
 #include <QWebFrame>
+#include <QProgressBar>
 
 #include "mainwindow.h"
 #include "scriptproxy.h"
@@ -317,7 +318,24 @@ void MainWindow::createToolBars()
 
 void MainWindow::createStatusBar()
 {
-	statusBar()->showMessage(tr("Ready"));
+	statusBar()->showMessage(tr("Ready."));
+	
+	statusProgressBar = new QProgressBar();
+	statusProgressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+	statusBar()->addPermanentWidget(statusProgressBar, 0);
+
+	connect(webView, &QWebView::loadStarted, statusProgressBar, &QProgressBar::show);
+	connect(webView, &QWebView::loadProgress, statusProgressBar, &QProgressBar::setValue);
+	connect(webView, &QWebView::loadFinished, this, &MainWindow::loadFinished);
+}
+
+
+void MainWindow::loadFinished(bool ok)
+{
+	statusProgressBar->hide();
+	if (!ok) {
+		statusBar()->showMessage(tr("Failed to load editor!"));
+	}
 }
 
 
