@@ -53,6 +53,7 @@ MainWindow::MainWindow()
 	createStatusBar();
 
 	connect(webView, SIGNAL(statusBarMessage(QString)), statusBar(), SLOT(showMessage(QString)));
+	connect(webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(clearTools()));
 
 	readSettings();
 
@@ -229,6 +230,7 @@ void MainWindow::createActions()
 			this, SLOT(createToolAction(QString, QString, QString, QString, QString, bool, bool)));
 	connect(this, SIGNAL(toolAction(QString, bool)), scriptProxy, SIGNAL(toolAction(QString, bool)));
 	connect(scriptProxy, SIGNAL(toolAvailable(QString, bool)), this, SLOT(toolAvailable(QString, bool)));
+	connect(scriptProxy, SIGNAL(clearTools()), this, SLOT(clearTools()));
 }
 
 
@@ -318,6 +320,16 @@ QAction *MainWindow::createToolAction(const QString &name, const QString &label,
 
 	connect(act, SIGNAL(triggered(bool)), this, SLOT(toolActionTriggered(bool)));
 	return act;
+}
+
+void MainWindow::clearTools()
+{
+	QHashIterator<QString, QAction*> i(toolActions);
+	while (i.hasNext()) {
+		i.next();
+		delete i.value();
+	}
+	toolActions.clear();
 }
 
 void MainWindow::toolActionTriggered(bool isChecked)

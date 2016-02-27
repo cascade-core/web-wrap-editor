@@ -62,6 +62,7 @@ class ScriptProxy : public QObject
 				const QString &shortcutKey, const QString &statusTip, bool isToggle, bool isOnToolbar);
 		void toolAction(const QString &name, bool isChecked);
 		void toolAvailable(const QString &name, bool isAvailable);
+		void clearTools();
 
 	private:
 		bool m_modified;
