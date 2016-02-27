@@ -60,7 +60,7 @@ MainWindow::MainWindow()
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
 
-	webView->load(QUrl("qrc:/example_editor.html"));
+	webView->load(QUrl("qrc:/glue/null.html"));
 }
 
 
