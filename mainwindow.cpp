@@ -60,7 +60,15 @@ MainWindow::MainWindow()
 	setCurrentFile("");
 	setUnifiedTitleAndToolBarOnMac(true);
 
-	webView->load(QUrl("qrc:/glue/null.html"));
+	// Calculate initial file
+	QString path;
+	path.append(editorBaseDir);
+	if (!path.endsWith('/')) {
+		path.append('/');
+	}
+	path.append("null.html");
+	webView->load(QUrl::fromLocalFile(path));
+	statusBar()->showMessage(path);
 }
 
 
@@ -354,6 +362,9 @@ void MainWindow::toolAvailable(const QString &name, bool isAvailable)
 void MainWindow::readSettings()
 {
 	QSettings settings("WebWrapEditor", "WebWrapEditor");
+	settings.beginGroup("htmlEditors");
+	editorBaseDir = settings.value("baseDir", DEFAULT_EDITOR_BASE_DIR).toString();
+	settings.endGroup();
 	settings.beginGroup("mainWindow");
 	restoreGeometry(settings.value("geometry").toByteArray());
 	restoreState(settings.value("state").toByteArray());
@@ -364,6 +375,9 @@ void MainWindow::readSettings()
 void MainWindow::writeSettings()
 {
 	QSettings settings("WebWrapEditor", "WebWrapEditor");
+	settings.beginGroup("htmlEditors");
+	settings.setValue("baseDir", editorBaseDir);
+	settings.endGroup();
 	settings.beginGroup("mainWindow");
 	settings.setValue("geometry", saveGeometry());
 	settings.setValue("state", saveState());
@@ -454,8 +468,9 @@ void MainWindow::setCurrentFile(const QString &fileName)
 	setWindowModified(false);
 
 	QString shownName = curFile;
-	if (curFile.isEmpty())
-		shownName = "untitled.txt";
+	if (curFile.isEmpty()) {
+		shownName = "untitled.json";
+	}
 	setWindowFilePath(shownName);
 }
 

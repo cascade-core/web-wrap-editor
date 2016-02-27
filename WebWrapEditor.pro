@@ -1,9 +1,11 @@
 QT += widgets uitools webkitwidgets script scripttools
-
 CONFIG += debug
+
+DEFAULT_EDITOR_BASE_DIR = "$$system(pwd)/editor/"
 
 GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
+DEFINES += DEFAULT_EDITOR_BASE_DIR=\\\"$$DEFAULT_EDITOR_BASE_DIR\\\"
 
 SOURCES = main.cpp mainwindow.cpp scriptproxy.cpp
 HEADERS = mainwindow.h scriptproxy.h

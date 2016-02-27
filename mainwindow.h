@@ -78,6 +78,7 @@ class MainWindow : public QMainWindow
 		ScriptProxy *scriptProxy;
 
 		QString curFile;
+		QString editorBaseDir;
 
 		QMenu *fileMenu;
 		QMenu *editMenu;
