@@ -200,7 +200,7 @@ void MainWindow::createActions()
 	exitAct->setStatusTip(tr("Exit the application"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-	reloadEditorAct = new QAction(QIcon::fromTheme("reload"), tr("&Reload editor"), this);
+	reloadEditorAct = new QAction(QIcon::fromTheme("view-refresh"), tr("&Reload editor"), this);
 	reloadEditorAct->setShortcuts(QKeySequence::Refresh);
 	reloadEditorAct->setStatusTip(tr("Reload the HTML editor without reloading the file"));
 	connect(reloadEditorAct, SIGNAL(triggered()), this, SLOT(reloadEditor()));
