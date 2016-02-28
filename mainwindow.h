@@ -84,6 +84,9 @@ class MainWindow : public QMainWindow
 		QWebInspector *webInspector;
 		ScriptProxy *scriptProxy;
 
+		QPlainTextEdit *editorDataView;
+		QDockWidget *editorDataDock;
+
 		QString curFile;
 		QString editorBaseDir;
 
@@ -111,6 +114,7 @@ class MainWindow : public QMainWindow
 		QAction *aboutAct;
 		QAction *aboutQtAct;
 		QAction *debugConsoleAct;
+		QAction *editorDataViewAct;
 
 		QHash<QString, QAction*> toolActions;
 

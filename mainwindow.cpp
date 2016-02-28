@@ -54,6 +54,17 @@ MainWindow::MainWindow()
 	attachToWebPage();
 	connect(webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachToWebPage()));
 
+	// Create buffer view dock
+	editorDataDock = new QDockWidget(tr("Editor data"));
+	editorDataDock->setObjectName("editorDataDock");
+	editorDataView = new QPlainTextEdit;
+	editorDataView->setReadOnly(true);
+	editorDataView->setWordWrapMode(QTextOption::NoWrap);
+	editorDataView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+	editorDataDock->setWidget(editorDataView);
+	addDockWidget(Qt::RightDockWidgetArea, editorDataDock);
+	connect(scriptProxy, &ScriptProxy::editorDataChanged, editorDataView, &QPlainTextEdit::setPlainText);
+
 	// Create GUI
 	createActions();
 	createToolBars();
@@ -244,10 +255,16 @@ void MainWindow::createActions()
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 	debugConsoleAct = webInspectorDock->toggleViewAction();
-	debugConsoleAct->setIcon(QIcon::fromTheme("utilities-terminal"));
+	debugConsoleAct->setIcon(QIcon::fromTheme("utilities-system-monitor"));
 	debugConsoleAct->setCheckable(true);
 	debugConsoleAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_I));
 	debugConsoleAct->setStatusTip(tr("Show web inspector"));
+
+	editorDataViewAct = editorDataDock->toggleViewAction();
+	editorDataViewAct->setIcon(QIcon::fromTheme("text-x-generic"));
+	editorDataViewAct->setCheckable(true);
+	editorDataViewAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
+	editorDataViewAct->setStatusTip(tr("Show raw editor data"));
 
 	cutAct->setEnabled(false);
 	connect(scriptProxy, SIGNAL(cutAvailable(bool)), cutAct, SLOT(setEnabled(bool)));
@@ -331,6 +348,7 @@ void MainWindow::createToolBars()
 	debugToolBar = addToolBar(tr("Debug toolbar"));
 	debugToolBar->setObjectName("debugToolBar");
 	debugToolBar->addAction(debugConsoleAct);
+	debugToolBar->addAction(editorDataViewAct);
 	debugToolBar->hide();
 }
 
