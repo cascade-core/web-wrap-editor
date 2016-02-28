@@ -51,6 +51,7 @@ class MainWindow : public QMainWindow
 		bool saveAs();
 		void about();
 		void documentWasModified();
+		void reloadEditor();
 		void attachToWebPage();
 
 		void loadEditor(const QString &glueFileName);
@@ -99,6 +100,7 @@ class MainWindow : public QMainWindow
 		QAction *openAct;
 		QAction *saveAct;
 		QAction *saveAsAct;
+		QAction *reloadEditorAct;
 		QAction *settingsAct;
 		QAction *exitAct;
 		QAction *undoAct;
@@ -113,6 +115,7 @@ class MainWindow : public QMainWindow
 		QHash<QString, QAction*> toolActions;
 
 		QProgressBar *statusProgressBar;
+		QString glueFileName;
 };
 
 #endif

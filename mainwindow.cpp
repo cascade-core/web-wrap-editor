@@ -29,18 +29,24 @@ MainWindow::MainWindow()
 {
 	setWindowIcon(QIcon::fromTheme("accessories-text-editor"));
 
+	// Setup web view
 	webView = new QWebView;
 	webView->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
 	setCentralWidget(webView);
 
+	// Setup inspector & dock
 	webInspectorDock = new QDockWidget(tr("Inspector"));
 	webInspectorDock->setObjectName("webInspectorDock");
 	webInspector = new QWebInspector;
-	webInspector->setPage(webView->page());
-	webView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 	webInspectorDock->setWidget(webInspector);
 	addDockWidget(Qt::BottomDockWidgetArea, webInspectorDock);
 	webInspectorDock->hide();
+
+	// Configure Web Page
+	QWebPage *webPage = webView->page();
+	webInspector->setPage(webPage);
+	webPage->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+	webPage->setLinkDelegationPolicy(QWebPage::DelegateExternalLinks);
 
 	// Attach this to JavaScript and keep it attached when page reloads
 	scriptProxy = new ScriptProxy(this);
@@ -55,7 +61,8 @@ MainWindow::MainWindow()
 	createStatusBar();
 
 	connect(webView, SIGNAL(statusBarMessage(QString)), statusBar(), SLOT(showMessage(QString)));
-	connect(webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(clearTools()));
+	connect(webPage->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(clearTools()));
+	connect(webView, &QWebView::linkClicked, &QDesktopServices::openUrl);
 
 	readSettings();
 
@@ -76,18 +83,24 @@ void MainWindow::attachToWebPage()
 }
 
 
-void MainWindow::loadEditor(const QString &glueFileName)
+void MainWindow::loadEditor(const QString &newGlueFileName)
 {
 	QString path;
 	path.append(editorBaseDir);
 	if (!path.endsWith('/')) {
 		path.append('/');
 	}
-	path.append(glueFileName);
+	path.append(newGlueFileName);
+	glueFileName = newGlueFileName;
 	webView->load(QUrl::fromLocalFile(path));
 	statusBar()->showMessage(tr("Loading editor (%1) ...").arg(path));
 }
 
+void MainWindow::reloadEditor()
+{
+	//loadEditor(glueFileName);
+	webView->reload();
+}
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
@@ -187,6 +200,11 @@ void MainWindow::createActions()
 	exitAct->setStatusTip(tr("Exit the application"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
+	reloadEditorAct = new QAction(QIcon::fromTheme("reload"), tr("&Reload editor"), this);
+	reloadEditorAct->setShortcuts(QKeySequence::Refresh);
+	reloadEditorAct->setStatusTip(tr("Reload the HTML editor without reloading the file"));
+	connect(reloadEditorAct, SIGNAL(triggered()), this, SLOT(reloadEditor()));
+
 	settingsAct = new QAction(QIcon::fromTheme("preferences-other"), tr("&Settings..."), this);
 	settingsAct->setShortcuts(QKeySequence::Preferences);
 	settingsAct->setStatusTip(tr("Open a settings dialog..."));
@@ -262,6 +280,7 @@ void MainWindow::createMenus()
 	fileMenu->addAction(saveAct);
 	fileMenu->addAction(saveAsAct);
 	fileMenu->addSeparator();
+	fileMenu->addAction(reloadEditorAct);
 	fileMenu->addAction(settingsAct);
 	fileMenu->addSeparator();
 	fileMenu->addAction(exitAct);
