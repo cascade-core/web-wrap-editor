@@ -136,7 +136,7 @@ void MainWindow::newFile()
 void MainWindow::open()
 {
 	if (maybeSave()) {
-		QString fileName = QFileDialog::getOpenFileName(this);
+		QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), curFile);
 		if (!fileName.isEmpty())
 			loadFile(fileName);
 	}
