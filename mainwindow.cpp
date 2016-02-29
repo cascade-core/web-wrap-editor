@@ -136,12 +136,12 @@ void MainWindow::autodetectEditor()
 		} else if (shebangStr == "duf_form" || shebangStr == "duf_view") {
 			loadEditor("duf.html");
 		} else {
+			loadEditor("plain.html");
 			QMessageBox msg;
 			msg.setText(tr("The file contains JSON data with unknown shebang."));
 			msg.setIcon(QMessageBox::Warning);
 			msg.setStandardButtons(QMessageBox::Ok);
 			msg.exec();
-			loadEditor("plain.html");
 		}
 		return;
 	}
@@ -166,12 +166,12 @@ void MainWindow::autodetectEditor()
 		return;
 	}
 
+	loadEditor("plain.html");
 	QMessageBox msg;
 	msg.setText(tr("The file contains JSON data of unknown structure."));
 	msg.setIcon(QMessageBox::Warning);
 	msg.setStandardButtons(QMessageBox::Ok);
 	msg.exec();
-	loadEditor("plain.html");
 }
 
 
