@@ -19,6 +19,7 @@
 #include <QWebView>
 #include <QWebInspector>
 #include <QWebFrame>
+#include <QWebHistory>
 #include <QProgressBar>
 
 #include "mainwindow.h"
@@ -104,6 +105,7 @@ void MainWindow::loadEditor(const QString &newGlueFileName)
 	path.append(newGlueFileName);
 	glueFileName = newGlueFileName;
 	webView->load(QUrl::fromLocalFile(path));
+	webView->history()->clear();
 	statusBar()->showMessage(tr("Loading editor (%1) ...").arg(path));
 }
 
@@ -112,6 +114,14 @@ void MainWindow::reloadEditor()
 	//loadEditor(glueFileName);
 	webView->reload();
 }
+
+void MainWindow::unloadEditor()
+{
+	webView->load(QUrl("about:blank"));
+	webView->history()->clear();
+	scriptProxy->clear();
+}
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
@@ -127,8 +137,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::newFile()
 {
 	if (maybeSave()) {
-		scriptProxy->clear();
+		unloadEditor();
 		setCurrentFile("");
+		loadEditor("null.html");
 	}
 }
 
@@ -495,7 +506,7 @@ bool MainWindow::loadFile(const QString &fileName)
 
 	// Create new script proxy and populate it
 	QTextStream in(&file);
-	scriptProxy->clear();
+	unloadEditor();
 	scriptProxy->setFileName(fileName);
 	scriptProxy->setEditorData(in.readAll());
 	scriptProxy->setModified(false);
@@ -506,6 +517,7 @@ bool MainWindow::loadFile(const QString &fileName)
 	setCurrentFile(fileName);
 	//statusBar()->showMessage(tr("File loaded"), 2000);
 
+	loadEditor("null.html");
 	return true;
 }
 

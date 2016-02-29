@@ -51,10 +51,11 @@ class MainWindow : public QMainWindow
 		bool saveAs();
 		void about();
 		void documentWasModified();
-		void reloadEditor();
 		void attachToWebPage();
 
 		void loadEditor(const QString &glueFileName);
+		void reloadEditor();
+		void unloadEditor();
 		void loadFinished(bool ok);
 
 		void openSettingsDialog();
