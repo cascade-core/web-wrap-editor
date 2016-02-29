@@ -52,13 +52,14 @@ class ScriptProxy : public QObject
 		void paste();
 		void undo();
 		void redo();
-		void tips();
+		void tips(bool);
 		void cutAvailable(bool);
 		void copyAvailable(bool);
 		void pasteAvailable(bool);
 		void undoAvailable(bool);
 		void redoAvailable(bool);
 		void tipsAvailable(bool);
+		void tipsChecked(bool);
 
 		void createToolAction(const QString &name, const QString &label, const QString &iconName,
 				const QString &shortcutKey, const QString &statusTip, bool isToggle, bool isOnToolbar);

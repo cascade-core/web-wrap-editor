@@ -101,6 +101,7 @@ class MainWindow : public QMainWindow
 		QToolBar *editToolBar;
 		QToolBar *toolToolBar;
 		QToolBar *debugToolBar;
+		QToolBar *helpToolBar;
 		QAction *newAct;
 		QAction *openAct;
 		QAction *saveAct;

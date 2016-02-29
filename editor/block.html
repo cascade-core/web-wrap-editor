@@ -62,9 +62,16 @@
 		};
 
 		// Setup editor
-		jQuery('textarea#editor').blockEditor({
-			paletteData: "block-editor/examples/palette.json"
-		});
+		console.log(jQuery('textarea#editor').blockEditor({
+			paletteData: "block-editor/examples/palette.json",
+			onInit: function(widget) {
+				WebWrap.tips.connect(function(checked) { widget.toggleHelp(checked); });
+				WebWrap.tipsAvailable(true);
+			},
+			onHelpToggle: function(visible) {
+				WebWrap.tipsChecked(visible);
+			}
+		}));
 
 	</script>
 </body>

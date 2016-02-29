@@ -340,8 +340,10 @@ void MainWindow::createActions()
 
 	tipsAct = new QAction(QIcon::fromTheme("help-contents"), tr("&Tips"), this);
 	tipsAct->setShortcuts(QKeySequence::HelpContents);
+	tipsAct->setCheckable(true);
 	tipsAct->setStatusTip(tr("Show tips for better use of the editor"));
-	connect(tipsAct, SIGNAL(triggered()), scriptProxy, SIGNAL(tips()));
+	connect(tipsAct, SIGNAL(triggered(bool)), scriptProxy, SIGNAL(tips(bool)));
+	connect(scriptProxy, SIGNAL(tipsChecked(bool)), tipsAct, SLOT(setChecked(bool)));
 
 	aboutAct = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 	aboutAct->setStatusTip(tr("Show the application's About box"));
@@ -452,6 +454,10 @@ void MainWindow::createToolBars()
 	debugToolBar->addAction(debugConsoleAct);
 	debugToolBar->addAction(editorDataViewAct);
 	debugToolBar->hide();
+
+	helpToolBar = addToolBar(tr("Help toolbar"));
+	helpToolBar->setObjectName("helpToolBar");
+	helpToolBar->addAction(tipsAct);
 }
 
 
