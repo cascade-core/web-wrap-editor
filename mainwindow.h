@@ -113,6 +113,7 @@ class MainWindow : public QMainWindow
 		QAction *cutAct;
 		QAction *copyAct;
 		QAction *pasteAct;
+		QAction *tipsAct;
 		QAction *aboutAct;
 		QAction *aboutQtAct;
 		QAction *debugConsoleAct;

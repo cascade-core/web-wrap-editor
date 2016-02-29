@@ -338,6 +338,11 @@ void MainWindow::createActions()
 	pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
 	connect(pasteAct, SIGNAL(triggered()), scriptProxy, SIGNAL(paste()));
 
+	tipsAct = new QAction(QIcon::fromTheme("help-contents"), tr("&Tips"), this);
+	tipsAct->setShortcuts(QKeySequence::HelpContents);
+	tipsAct->setStatusTip(tr("Show tips for better use of the editor"));
+	connect(tipsAct, SIGNAL(triggered()), scriptProxy, SIGNAL(tips()));
+
 	aboutAct = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 	aboutAct->setStatusTip(tr("Show the application's About box"));
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -372,6 +377,9 @@ void MainWindow::createActions()
 
 	redoAct->setEnabled(false);
 	connect(scriptProxy, SIGNAL(redoAvailable(bool)), redoAct, SLOT(setEnabled(bool)));
+
+	tipsAct->setEnabled(false);
+	connect(scriptProxy, SIGNAL(tipsAvailable(bool)), tipsAct, SLOT(setEnabled(bool)));
 
 	connect(scriptProxy, SIGNAL(createToolAction(QString, QString, QString, QString, QString, bool, bool)),
 			this, SLOT(createToolAction(QString, QString, QString, QString, QString, bool, bool)));
@@ -412,6 +420,8 @@ void MainWindow::createMenus()
 	menuBar()->addSeparator();
 
 	helpMenu = menuBar()->addMenu(tr("&Help"));
+	helpMenu->addAction(tipsAct);
+	helpMenu->addSeparator();
 	helpMenu->addAction(aboutAct);
 	helpMenu->addAction(aboutQtAct);
 }
