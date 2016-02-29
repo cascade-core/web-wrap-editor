@@ -39,9 +39,7 @@
 	<textarea name="cfg" id="editor" class="block_editor_widget" rows="25" cols="80"
 		data-doc_link="/admin/doc/block/{block}"
 		data-edit_link="/admin/block-editor/{block}"
-	>
-		{}
-	</textarea>
+	></textarea>
 
 	<script type="text/javascript">
 
@@ -52,6 +50,7 @@
 		// Watch for change of editor data (file loaded or something)
 		WebWrap.editorDataChanged.connect(function(data) {
 			editor.value = data;
+			editor.onchange();
 		});
 
 		// Update data when changed by editor
@@ -63,7 +62,7 @@
 		};
 
 		// Setup editor
-		jQuery('textarea.block_editor_widget').blockEditor({
+		jQuery('textarea#editor').blockEditor({
 			paletteData: "block-editor/examples/palette.json"
 		});
 

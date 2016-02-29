@@ -1,0 +1,593 @@
+{
+    "states": {
+        "draft": {
+            "state": "draft",
+            "label": "Draft",
+            "color": "#eeeeee",
+            "x": 54.5,
+            "y": 98.5,
+            "url": ""
+        },
+        "published": {
+            "state": "published",
+            "label": "Published",
+            "color": "#99ff33",
+            "x": 38,
+            "y": 451,
+            "url": ""
+        },
+        "rejected": {
+            "state": "rejected",
+            "label": "Rejected",
+            "color": "#ff6633",
+            "x": 227.5,
+            "y": 451,
+            "url": ""
+        },
+        "submitted": {
+            "state": "submitted",
+            "label": "Submitted",
+            "color": "#eeeeee",
+            "x": 54.5,
+            "y": 211.5,
+            "url": ""
+        },
+        "waiting": {
+            "state": "waiting",
+            "label": "Waiting",
+            "color": "#eeeeee",
+            "x": 44.5,
+            "y": 332,
+            "url": ""
+        }
+    },
+    "virtualStates": {
+        "__start__": {
+            "state": "__start__",
+            "label": "",
+            "color": "#000",
+            "x": 54.5,
+            "y": 12.5
+        },
+        "__end__": {
+            "state": "__end__",
+            "label": "",
+            "color": "#000",
+            "x": 119.75,
+            "y": 551.5
+        }
+    },
+    "actions": {
+        "accept": {
+            "label": "accept",
+            "color": "#522900",
+            "transitions": {
+                "submitted-l39": {
+                    "label": "accept",
+                    "color": "#522900",
+                    "targets": [
+                        "waiting"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1545.9425531281079,
+                            "y": 1728.596260600033
+                        },
+                        {
+                            "x": 1521.5,
+                            "y": 1776
+                        },
+                        {
+                            "x": 1538.0477854185158,
+                            "y": 1815.4330205717824
+                        }
+                    ]
+                },
+                "submitted-9bb": {
+                    "label": "accept",
+                    "color": "#522900",
+                    "targets": [
+                        "published"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1536.5240937182327,
+                            "y": 1727.1376052899093
+                        },
+                        {
+                            "x": 1478.5,
+                            "y": 1776
+                        },
+                        {
+                            "x": 1478.5,
+                            "y": 1832
+                        },
+                        {
+                            "x": 1478.5,
+                            "y": 1888
+                        },
+                        {
+                            "x": 1523.2103765668262,
+                            "y": 1935.340398717816
+                        }
+                    ]
+                }
+            }
+        },
+        "return": {
+            "label": "return",
+            "color": "#008080",
+            "transitions": {
+                "submitted": {
+                    "label": "return",
+                    "color": "#008080",
+                    "targets": [
+                        "draft"
+                    ]
+                }
+            }
+        },
+        "submit": {
+            "label": "submit",
+            "color": "#0000CC",
+            "transitions": {
+                "draft-7ha": {
+                    "label": "submit",
+                    "color": "#0000CC",
+                    "targets": [
+                        "submitted"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1552.2088836032708,
+                            "y": 1615.9190133912316
+                        },
+                        {
+                            "x": 1548,
+                            "y": 1647
+                        },
+                        {
+                            "x": 1552.8015722433508,
+                            "y": 1695.0157224335078
+                        }
+                    ]
+                }
+            }
+        },
+        "reject": {
+            "label": "reject",
+            "color": "#1b0a33",
+            "transitions": {
+                "submitted-sis": {
+                    "label": "reject",
+                    "color": "#1b0a33",
+                    "targets": [
+                        "rejected"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1584.4546587222144,
+                            "y": 1723.081492244056
+                        },
+                        {
+                            "x": 1727.5,
+                            "y": 1776
+                        },
+                        {
+                            "x": 1727.5,
+                            "y": 1832
+                        },
+                        {
+                            "x": 1727.5,
+                            "y": 1888
+                        },
+                        {
+                            "x": 1727.5,
+                            "y": 1934
+                        }
+                    ]
+                }
+            }
+        },
+        "withdraw": {
+            "label": "withdraw",
+            "color": "#003D00",
+            "transitions": {
+                "submitted-m4": {
+                    "label": "withdraw",
+                    "color": "#003D00",
+                    "targets": [
+                        "draft"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1558.0167478494861,
+                            "y": 1695.0675103543258
+                        },
+                        {
+                            "x": 1568,
+                            "y": 1647
+                        },
+                        {
+                            "x": 1559.1852602823114,
+                            "y": 1615.6587032259965
+                        }
+                    ]
+                }
+            }
+        },
+        "create": {
+            "label": "Create",
+            "color": "#444444",
+            "transitions": {
+                "-rhw": {
+                    "label": "create",
+                    "color": "#444444",
+                    "targets": [
+                        "draft"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1554.5,
+                            "y": 1525
+                        },
+                        {
+                            "x": 1554.5,
+                            "y": 1550
+                        },
+                        {
+                            "x": 1554.5,
+                            "y": 1582
+                        }
+                    ]
+                }
+            },
+            "heading": "New article",
+            "returns": "new_id",
+            "block": {
+                "inputs": {
+                    "item": null
+                },
+                "outputs": {
+                    "ref": "return_value"
+                }
+            }
+        },
+        "edit": {
+            "label": "Edit",
+            "color": "#D11975",
+            "transitions": {
+                "submitted-u3f": {
+                    "label": "edit",
+                    "color": "#D11975",
+                    "targets": [
+                        "submitted"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1576.6228858217999,
+                            "y": 1697.9164652593317
+                        },
+                        {
+                            "x": 1617.3333333333333,
+                            "y": 1672
+                        },
+                        {
+                            "x": 1623.1666666666667,
+                            "y": 1672
+                        },
+                        {
+                            "x": 1629,
+                            "y": 1711.5
+                        },
+                        {
+                            "x": 1623.1666666666667,
+                            "y": 1751
+                        },
+                        {
+                            "x": 1617.3333333333333,
+                            "y": 1751
+                        },
+                        {
+                            "x": 1577.0075283488375,
+                            "y": 1725.9701900096234
+                        }
+                    ]
+                },
+                "draft-xnh": {
+                    "label": "edit",
+                    "color": "#D11975",
+                    "targets": [
+                        "draft"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1573.6760230420355,
+                            "y": 1589.1731412168929
+                        },
+                        {
+                            "x": 1601.3333333333333,
+                            "y": 1575
+                        },
+                        {
+                            "x": 1607.1666666666667,
+                            "y": 1575
+                        },
+                        {
+                            "x": 1613,
+                            "y": 1598.5
+                        },
+                        {
+                            "x": 1607.1666666666667,
+                            "y": 1622
+                        },
+                        {
+                            "x": 1601.3333333333333,
+                            "y": 1622
+                        },
+                        {
+                            "x": 1573.9429111739603,
+                            "y": 1608.5484759502012
+                        }
+                    ]
+                }
+            },
+            "heading": "Edit article",
+            "block": {
+                "inputs": {
+                    "ref": null,
+                    "item": null
+                },
+                "outputs": []
+            }
+        },
+        "publish": {
+            "label": "publish",
+            "color": "#000000",
+            "transitions": {
+                "waiting-zzb": {
+                    "label": "publish",
+                    "color": "#000000",
+                    "targets": [
+                        "published"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1544.8482161051281,
+                            "y": 1848.9997962256452
+                        },
+                        {
+                            "x": 1544.5,
+                            "y": 1888
+                        },
+                        {
+                            "x": 1539.7521028421081,
+                            "y": 1934.0180801457207
+                        }
+                    ]
+                }
+            }
+        },
+        "hide": {
+            "label": "hide",
+            "color": "#3D0099",
+            "transitions": {
+                "published-aa": {
+                    "label": "hide",
+                    "color": "#3D0099",
+                    "targets": [
+                        "submitted"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1555.3937317569148,
+                            "y": 1935.8854468870948
+                        },
+                        {
+                            "x": 1610.5,
+                            "y": 1888
+                        },
+                        {
+                            "x": 1610.5,
+                            "y": 1832
+                        },
+                        {
+                            "x": 1610.5,
+                            "y": 1776
+                        },
+                        {
+                            "x": 1568.4206415956503,
+                            "y": 1727.9093046807432
+                        }
+                    ]
+                },
+                "waiting-3xw": {
+                    "label": "hide",
+                    "color": "#3D0099",
+                    "targets": [
+                        "submitted"
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1547.8715294115013,
+                            "y": 1815.0730897848339
+                        },
+                        {
+                            "x": 1554.5,
+                            "y": 1776
+                        },
+                        {
+                            "x": 1554.5,
+                            "y": 1729
+                        }
+                    ]
+                }
+            }
+        },
+        "listing": {
+            "label": "listing",
+            "color": "#754719",
+            "transitions": {},
+            "heading": "Articles"
+        },
+        "show": {
+            "label": "show",
+            "color": "#00B200",
+            "transitions": {},
+            "heading": "{title}",
+            "heading_without_links": true
+        },
+        "remove": {
+            "label": "remove",
+            "color": "#942192",
+            "transitions": {
+                "rejected-od": {
+                    "label": "remove",
+                    "color": "#942192",
+                    "targets": [
+                        ""
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1727.5,
+                            "y": 1968
+                        },
+                        {
+                            "x": 1727.5,
+                            "y": 2014
+                        },
+                        {
+                            "x": 1631.3084208029347,
+                            "y": 2047.3998538878698
+                        }
+                    ]
+                },
+                "waiting-t2o": {
+                    "label": "remove",
+                    "color": "#942192",
+                    "targets": [
+                        ""
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1567.9076311613132,
+                            "y": 1843.4538155806565
+                        },
+                        {
+                            "x": 1657,
+                            "y": 1888
+                        },
+                        {
+                            "x": 1657,
+                            "y": 1951
+                        },
+                        {
+                            "x": 1657,
+                            "y": 2014
+                        },
+                        {
+                            "x": 1628.3388347648317,
+                            "y": 2042.6611652351683
+                        }
+                    ]
+                },
+                "published-9l8": {
+                    "label": "remove",
+                    "color": "#942192",
+                    "targets": [
+                        ""
+                    ],
+                    "dagrePath": [
+                        {
+                            "x": 1538,
+                            "y": 1968
+                        },
+                        {
+                            "x": 1538,
+                            "y": 2014
+                        },
+                        {
+                            "x": 1608.144398394183,
+                            "y": 2046.2750299359739
+                        }
+                    ]
+                }
+            }
+        },
+        "": {
+            "label": "",
+            "color": "#dd0000",
+            "transitions": {}
+        }
+    },
+    "class": "ExampleApplication\\UniversalStateMachine",
+    "include": [
+        "article.graphml"
+    ],
+    "name": "Article",
+    "desc": "Article",
+    "table": "article",
+    "flupdo_resource": "database",
+    "io_name": "item",
+    "url": "/article/{id}",
+    "parent_url": "/article",
+    "default_access_policy": null,
+    "state_select": "state",
+    "properties": {
+        "id": {
+            "type": "number",
+            "label": "ID",
+            "is_pk": true,
+            "link": "/article/{id}",
+            "calculated": true
+        },
+        "title": {
+            "type": "text",
+            "label": "Title",
+            "required": true,
+            "link": "/article/{id}"
+        },
+        "state": {
+            "type": "text",
+            "label": "State",
+            "calculated": true
+        },
+        "perex": {
+            "type": "textarea",
+            "label": "Perex",
+            "required": true,
+            "tabular_hidden": true,
+            "class": "perex",
+            "rows": 10
+        },
+        "body_md": {
+            "type": "markdownarea",
+            "label": "Text",
+            "required": true,
+            "tabular_hidden": true,
+            "rows": 24
+        },
+        "created": {
+            "type": "datetime",
+            "label": "Created",
+            "format": "%Y-%m-%d %H:%M",
+            "readonly": true,
+            "tabular_hidden": false,
+            "tabular_width": 84,
+            "calculated": true
+        },
+        "modified": {
+            "type": "datetime",
+            "label": "Modified",
+            "format": "%Y-%m-%d %H:%M",
+            "readonly": true,
+            "tabular_hidden": false,
+            "tabular_width": 84,
+            "calculated": true
+        }
+    },
+    "default_filters": {
+        "order_by": "created",
+        "order_asc": false
+    }
+}

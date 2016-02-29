@@ -1,0 +1,64 @@
+<html>
+<head>
+	<!-- Smalldb Editor plugin -->
+	<link rel="stylesheet" href="smalldb-editor/external/font-awesome-4.3.0/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="smalldb-editor/css/smalldb_reset.css" type="text/css">
+	<link rel="stylesheet" href="smalldb-editor/css/smalldb_editor.css" type="text/css">
+	<script type="text/javascript" src="smalldb-editor/external/jquery.js"></script>
+	<script type="text/javascript" src="smalldb-editor/external/gettext.js"></script>
+	<script type="text/javascript" src="smalldb-editor/external/dagre.js"></script>
+	<script type="text/javascript" src="smalldb-editor/external/c2s.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/geometry.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/spline.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/tarjan.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/state.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/action.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/transition.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/editor.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/canvas.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/storage.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/toolbar.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/smalldb_editor.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/smalldb_editor.js"></script>
+
+	<style type="text/css">
+		.smalldb-editor {
+			position: absolute;
+			margin: 0px;
+			padding: 0px;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+	</style>
+</head>
+<body>
+	<textarea name="cfg" id="editor" class="smalldb_editor_widget" rows="25" cols="80"></textarea>
+
+	<script type="text/javascript">
+
+		// Load data
+		var editor = document.getElementById("editor");
+		editor.value = WebWrap.editorData;
+
+		// Watch for change of editor data (file loaded or something)
+		WebWrap.editorDataChanged.connect(function(data) {
+			editor.value = data;
+		});
+
+		// Update data when changed by editor
+		editor.onchange = function(event) {
+			if (WebWrap.editorData != editor.value) {
+				WebWrap.editorData = editor.value;
+				WebWrap.modified = true;
+			}
+		};
+
+		// Setup editor
+		jQuery('textarea#editor').smalldbEditor();
+
+	</script>
+</body>
+</html>
