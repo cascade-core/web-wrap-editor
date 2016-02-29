@@ -227,7 +227,7 @@ void MainWindow::newFile()
 void MainWindow::open()
 {
 	if (maybeSave()) {
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), curFile);
+		QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), curFile, tr("JSON files (*.json *.json.php);;All files (*)"));
 		if (!fileName.isEmpty())
 			loadFile(fileName);
 	}
@@ -249,6 +249,7 @@ bool MainWindow::saveAs()
 	QFileDialog dialog(this);
 	dialog.setWindowModality(Qt::WindowModal);
 	dialog.setAcceptMode(QFileDialog::AcceptSave);
+	dialog.setDefaultSuffix("json.php");
 	QStringList files;
 	if (dialog.exec())
 		files = dialog.selectedFiles();
