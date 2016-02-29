@@ -1,5 +1,5 @@
 #!/bin/sh
 
 set -v
-exec ./WebWrapEditor example-block.json
+exec ./WebWrapEditor examples/block.json
 
