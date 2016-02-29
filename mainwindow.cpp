@@ -491,7 +491,11 @@ QAction *MainWindow::createToolAction(const QString &name, const QString &label,
 	act->setObjectName(name);
 	act->setEnabled(false);
 	act->setShortcut(QKeySequence(shortcutKey));
-	act->setStatusTip(statusTip);
+	if (!statusTip.isEmpty()) {
+		act->setStatusTip(statusTip);
+	} else {
+		act->setStatusTip(label);
+	}
 	act->setCheckable(isCheckable);
 	if (toolActions[name]) {
 		delete toolActions[name];

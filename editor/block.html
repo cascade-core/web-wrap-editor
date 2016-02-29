@@ -64,13 +64,78 @@
 		// Setup editor
 		console.log(jQuery('textarea#editor').blockEditor({
 			paletteData: "block-editor/examples/palette.json",
+			toolbarsVisible: false,
 			onInit: function(widget) {
 				WebWrap.tips.connect(function(checked) { widget.toggleHelp(checked); });
 				WebWrap.tipsAvailable(true);
+				WebWrap.copy.connect(function() { widget.palette.toolbar.$copy.click(); });
+				WebWrap.cut.connect(function() { widget.palette.toolbar.$cut.click(); });
+				WebWrap.paste.connect(function() { widget.palette.toolbar.$paste.click(); });
+				WebWrap.undo.connect(function() { widget.palette.toolbar.$undo.click(); });
+				WebWrap.redo.connect(function() { widget.palette.toolbar.$redo.click(); });
+
+				WebWrap.createToolAction("parent_properties_toggle", "Parent block properties",
+						"document-properties", "Ctrl+Shift+P",
+						"Edit parent block properties", false, true);
+				WebWrap.toolAvailable("parent_properties_toggle", true);
+
+				WebWrap.createToolAction("palette_reload", "Reload palette",
+						"view-refresh", "Ctrl+Shift+R",
+						"Reload palette", false, true);
+				WebWrap.toolAvailable("palette_reload", true);
+
+				WebWrap.createToolAction("zoom_in", "Zoom in",
+						"zoom-in", "Ctrl++",
+						null, false, true);
+				WebWrap.toolAvailable("zoom_in", true);
+
+				WebWrap.createToolAction("zoom_out", "Zoom out",
+						"zoom-out", "Ctrl+-",
+						null, false, true);
+				WebWrap.toolAvailable("zoom_out", true);
+
+				WebWrap.createToolAction("zoom_reset", "Zoom 1:1",
+						"zoom-original", "Ctrl+0",
+						null, false, true);
+				WebWrap.toolAvailable("zoom_reset", true);
+
+				WebWrap.toolAction.connect(function(actionName) {
+					switch (actionName) {
+						case 'parent_properties_toggle': widget.palette.toolbar.$parent.click(); break;
+						case 'palette_reload': widget.palette.toolbar.$reload.click(); break;
+						case 'zoom_in': widget.palette.toolbar.$zoomIn.click(); break;
+						case 'zoom_out': widget.palette.toolbar.$zoomOut.click(); break;
+						case 'zoom_reset': widget.palette.toolbar.$zoomReset.click(); break;
+					}
+				});
 			},
 			onHelpToggle: function(visible) {
 				WebWrap.tipsChecked(visible);
-			}
+			},
+			onCopyAvailable: function(isAvailable) {
+				WebWrap.copyAvailable(isAvailable);
+			},
+			onCutAvailable: function(isAvailable) {
+				WebWrap.cutAvailable(isAvailable);
+			},
+			onPasteAvailable: function(isAvailable) {
+				WebWrap.pasteAvailable(isAvailable);
+			},
+			onUndoAvailable: function(isAvailable) {
+				WebWrap.undoAvailable(isAvailable);
+			},
+			onRedoAvailable: function(isAvailable) {
+				WebWrap.redoAvailable(isAvailable);
+			},
+			onZoomInAvailable: function(isAvailable) {
+				WebWrap.toolAvailable("zoom_in", isAvailable);
+			},
+			onZoomOutAvailable: function(isAvailable) {
+				WebWrap.toolAvailable("zoom_out", isAvailable);
+			},
+			onZoomResetAvailable: function(isAvailable) {
+				WebWrap.toolAvailable("zoom_reset", isAvailable);
+			},
 		}));
 
 	</script>
