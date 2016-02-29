@@ -21,6 +21,9 @@
 #include <QWebFrame>
 #include <QWebHistory>
 #include <QProgressBar>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "scriptproxy.h"
@@ -92,6 +95,83 @@ void MainWindow::attachToWebPage()
 {
 	scriptProxy->setObjectName("ScriptProxy");
 	webView->page()->mainFrame()->addToJavaScriptWindowObject(QString("WebWrap"), scriptProxy);
+}
+
+
+void MainWindow::autodetectEditor()
+{
+	QJsonParseError err;
+	QJsonDocument doc = QJsonDocument::fromJson(scriptProxy->editorData().toUtf8(), &err);
+
+	if (err.error != QJsonParseError::NoError) {
+		QMessageBox msg;
+		msg.setText(tr("The file does not contain a valid JSON data."));
+		msg.setIcon(QMessageBox::Critical);
+		msg.setInformativeText(tr("Error at offset %1: %2").arg(err.offset).arg(err.errorString()));
+		msg.setStandardButtons(QMessageBox::Close);
+		msg.exec();
+		return;
+	}
+
+	if (!doc.isObject()) {
+		QMessageBox msg;
+		msg.setText(tr("The file does not contain a valid JSON object."));
+		msg.setIcon(QMessageBox::Critical);
+		msg.setStandardButtons(QMessageBox::Close);
+		msg.exec();
+		return;
+	}
+
+	QJsonObject docObject = doc.object();
+
+	QJsonValue shebang = docObject.value("#!");
+	if (shebang.isString()) {
+		// Shebang exists, use it.
+		QString shebangStr = shebang.toString();
+
+		if (shebangStr == "block") {
+			loadEditor("block.html");
+		} else if (shebangStr == "smalldb_machine") {
+			loadEditor("duf.html");
+		} else if (shebangStr == "duf_form" || shebangStr == "duf_view") {
+			loadEditor("duf.html");
+		} else {
+			QMessageBox msg;
+			msg.setText(tr("The file contains JSON data with unknown shebang."));
+			msg.setIcon(QMessageBox::Warning);
+			msg.setStandardButtons(QMessageBox::Ok);
+			msg.exec();
+			loadEditor("plain.html");
+		}
+		return;
+	}
+
+	//// Heuristics when shebang is missing
+	
+	// Block
+	if (docObject.value("blocks").isObject()) {
+		loadEditor("block.html");
+		return;
+	}
+
+	// Smalldb state machine
+	if (docObject.value("states").isObject() && docObject.value("actions").isObject() && docObject.value("properties").isObject()) {
+		loadEditor("smalldb.html");
+		return;
+	}
+
+	// DUF form
+	if (docObject.value("form").isObject() && docObject.value("field_groups").isObject() && docObject.value("layout").isObject()) {
+		loadEditor("duf.html");
+		return;
+	}
+
+	QMessageBox msg;
+	msg.setText(tr("The file contains JSON data of unknown structure."));
+	msg.setIcon(QMessageBox::Warning);
+	msg.setStandardButtons(QMessageBox::Ok);
+	msg.exec();
+	loadEditor("plain.html");
 }
 
 
@@ -517,7 +597,7 @@ bool MainWindow::loadFile(const QString &fileName)
 	setCurrentFile(fileName);
 	//statusBar()->showMessage(tr("File loaded"), 2000);
 
-	loadEditor("null.html");
+	autodetectEditor();
 	return true;
 }
 

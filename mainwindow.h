@@ -53,6 +53,7 @@ class MainWindow : public QMainWindow
 		void documentWasModified();
 		void attachToWebPage();
 
+		void autodetectEditor();
 		void loadEditor(const QString &glueFileName);
 		void reloadEditor();
 		void unloadEditor();
