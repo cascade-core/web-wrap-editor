@@ -29,6 +29,8 @@ class QWebInspector;
 class QDockWidget;
 class QProgressBar;
 class ScriptProxy;
+class PlainTextEdit;
+
 
 class MainWindow : public QMainWindow
 {
@@ -86,7 +88,7 @@ class MainWindow : public QMainWindow
 		QWebInspector *webInspector;
 		ScriptProxy *scriptProxy;
 
-		QPlainTextEdit *editorDataView;
+		PlainTextEdit *editorDataView;
 		QDockWidget *editorDataDock;
 
 		QString curFile;

@@ -28,6 +28,7 @@
 #include "mainwindow.h"
 #include "scriptproxy.h"
 #include "settingsdialog.h"
+#include "plaintextedit.h"
 
 MainWindow::MainWindow()
 {
@@ -61,13 +62,13 @@ MainWindow::MainWindow()
 	// Create buffer view dock
 	editorDataDock = new QDockWidget(tr("Editor data"));
 	editorDataDock->setObjectName("editorDataDock");
-	editorDataView = new QPlainTextEdit;
+	editorDataView = new PlainTextEdit;
 	editorDataView->setReadOnly(true);
 	editorDataView->setWordWrapMode(QTextOption::NoWrap);
 	editorDataView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 	editorDataDock->setWidget(editorDataView);
 	addDockWidget(Qt::RightDockWidgetArea, editorDataDock);
-	connect(scriptProxy, &ScriptProxy::editorDataChanged, editorDataView, &QPlainTextEdit::setPlainText);
+	connect(scriptProxy, &ScriptProxy::editorDataChanged, editorDataView, &PlainTextEdit::setPlainText);
 
 	// Create GUI
 	createActions();
