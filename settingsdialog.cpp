@@ -16,6 +16,7 @@
  */
 
 #include <QSettings>
+#include <QFileDialog>
 
 #include "settingsdialog.h"
 #include "build/ui_settingsdialog.h"
@@ -56,5 +57,17 @@ void SettingsDialog::writeSettings()
 SettingsDialog::~SettingsDialog()
 {
 	delete ui;
+}
+
+void SettingsDialog::selectBaseDirectory()
+{
+	QFileDialog dialog(this);
+	dialog.setWindowTitle(tr("Select base directory"));
+	dialog.setOption(QFileDialog::ShowDirsOnly);
+	dialog.setDirectory(ui->htmlEditorsBaseDirLineEdit->text());
+
+	if (dialog.exec()) {
+		ui->htmlEditorsBaseDirLineEdit->setText(dialog.selectedFiles().first());
+	}
 }
 

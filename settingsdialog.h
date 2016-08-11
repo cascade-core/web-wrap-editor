@@ -31,6 +31,7 @@ class SettingsDialog : public QDialog
 
 	private slots:
 		void writeSettings();
+		void selectBaseDirectory();
 
 	private:
 		Ui_SettingsDialog *ui;
