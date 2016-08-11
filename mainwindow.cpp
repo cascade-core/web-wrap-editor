@@ -305,7 +305,10 @@ void MainWindow::createActions()
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
 	reloadEditorAct = new QAction(QIcon::fromTheme("view-refresh"), tr("&Reload editor"), this);
-	reloadEditorAct->setShortcuts(QKeySequence::Refresh);
+	QList<QKeySequence> reloadEditorShortcutList;
+	reloadEditorShortcutList.append(QKeySequence(Qt::Key_F5));
+	reloadEditorShortcutList.append(QKeySequence(Qt::CTRL + Qt::Key_R));
+	reloadEditorAct->setShortcuts(reloadEditorShortcutList);
 	reloadEditorAct->setStatusTip(tr("Reload the HTML editor without reloading the file"));
 	connect(reloadEditorAct, SIGNAL(triggered()), this, SLOT(reloadEditor()));
 
@@ -357,8 +360,13 @@ void MainWindow::createActions()
 	debugConsoleAct = webInspectorDock->toggleViewAction();
 	debugConsoleAct->setIcon(QIcon::fromTheme("utilities-system-monitor"));
 	debugConsoleAct->setCheckable(true);
-	debugConsoleAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_I));
+	QList<QKeySequence> debugConsoleShortcutList;
+	debugConsoleShortcutList.append(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_I));
+	debugConsoleShortcutList.append(QKeySequence(Qt::Key_F12));
+	debugConsoleAct->setShortcuts(debugConsoleShortcutList);
 	debugConsoleAct->setStatusTip(tr("Show web inspector"));
+
+
 
 	editorDataViewAct = editorDataDock->toggleViewAction();
 	editorDataViewAct->setIcon(QIcon::fromTheme("text-x-generic"));
