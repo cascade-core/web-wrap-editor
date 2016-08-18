@@ -398,6 +398,7 @@ void MainWindow::createActions()
 			this, SLOT(createToolAction(QString, QString, QString, QString, QString, bool, bool)));
 	connect(this, SIGNAL(toolAction(QString, bool)), scriptProxy, SIGNAL(toolAction(QString, bool)));
 	connect(scriptProxy, SIGNAL(toolAvailable(QString, bool)), this, SLOT(toolAvailable(QString, bool)));
+	connect(scriptProxy, SIGNAL(toolChecked(QString, bool)), this, SLOT(toolChecked(QString, bool)));
 	connect(scriptProxy, SIGNAL(clearTools()), this, SLOT(clearTools()));
 }
 
@@ -546,6 +547,15 @@ void MainWindow::toolAvailable(const QString &name, bool isAvailable)
 	QAction *act = toolActions.value(name);
 	if (act) {
 		act->setEnabled(isAvailable);
+	}
+}
+
+
+void MainWindow::toolChecked(const QString &name, bool isChecked)
+{
+	QAction *act = toolActions.value(name);
+	if (act) {
+		act->setChecked(isChecked);
 	}
 }
 

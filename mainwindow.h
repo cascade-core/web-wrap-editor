@@ -67,6 +67,7 @@ class MainWindow : public QMainWindow
 				const QString &shortcutKey, const QString &statusTip, bool isCheckable, bool isOnToolbar);
 		void toolActionTriggered(bool isChecked = false);
 		void toolAvailable(const QString &name, bool isAvailable);
+		void toolChecked(const QString &name, bool isChecked);
 		void clearTools();
 
 	signals:
