@@ -1,24 +1,25 @@
 <html>
 <head>
 	<!-- Smalldb Editor plugin -->
-	<link rel="stylesheet" href="smalldb-editor/external/font-awesome-4.3.0/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="smalldb-editor/external/font-awesome-4.6.3/css/font-awesome.min.css" type="text/css">
 	<link rel="stylesheet" href="smalldb-editor/css/smalldb_reset.css" type="text/css">
 	<link rel="stylesheet" href="smalldb-editor/css/smalldb_editor.css" type="text/css">
 	<script type="text/javascript" src="smalldb-editor/external/jquery.js"></script>
 	<script type="text/javascript" src="smalldb-editor/external/gettext.js"></script>
 	<script type="text/javascript" src="smalldb-editor/external/dagre.js"></script>
 	<script type="text/javascript" src="smalldb-editor/external/c2s.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/geometry.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/spline.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/tarjan.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/state.js"></script>
 	<script type="text/javascript" src="smalldb-editor/js/classes/action.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/transition.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/editor.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/arrow.js"></script>
 	<script type="text/javascript" src="smalldb-editor/js/classes/canvas.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/storage.js"></script>
-	<script type="text/javascript" src="smalldb-editor/js/classes/toolbar.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/editor.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/geometry.js"></script>
 	<script type="text/javascript" src="smalldb-editor/js/classes/smalldb_editor.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/spline.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/state.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/storage.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/tarjan.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/toolbar.js"></script>
+	<script type="text/javascript" src="smalldb-editor/js/classes/transition.js"></script>
 	<script type="text/javascript" src="smalldb-editor/js/smalldb_editor.js"></script>
 
 	<style type="text/css">
@@ -67,8 +68,92 @@
 		};
 
 		// Setup editor
-		jQuery('textarea#editor').smalldbEditor();
+		jQuery('textarea#editor').smalldbEditor({
+			onInit: function(editor) {
+				var toolbar = editor.toolbar;
+
+				WebWrap.tips.connect(function(checked) { toolbar.toggleHelp(checked); });
+				WebWrap.tipsAvailable(true);
+
+				WebWrap.copy.connect(function()  { toolbar.copy();  });
+				WebWrap.cut.connect(function()   { toolbar.cut();   });
+				WebWrap.paste.connect(function() { toolbar.paste(); });
+				WebWrap.undo.connect(function()  { toolbar.undo();  });
+				WebWrap.redo.connect(function()  { toolbar.redo();  });
+
+				WebWrap.createToolAction("zoom_in", "Zoom in", "zoom-in", "Ctrl++", null, false, true);
+				WebWrap.createToolAction("zoom_out", "Zoom out", "zoom-out", "Ctrl+-", null, false, true);
+				WebWrap.createToolAction("zoom_reset", "Zoom 1:1", "zoom-original", "Ctrl+0", null, false, true);
+
+				WebWrap.createToolAction("toggle_cycles", "Toggle cycles visibility", "document-revert", "Ctrl+Shift+O", null, true, true);
+				WebWrap.toolAvailable("toggle_cycles", true);
+				WebWrap.toolChecked("toggle_cycles", true);
+
+				WebWrap.createToolAction("toggle_control_points", "Toggle control points visibility", "media-record", "Ctrl+Shift+P", null, true, true);
+				WebWrap.toolAvailable("toggle_control_points", true);
+				WebWrap.toolChecked("toggle_control_points", false);
+
+				WebWrap.createToolAction("automatic_layout", "Automatic layout", "view-sort-ascending", "Ctrl+L", null, false, true);
+				WebWrap.toolAvailable("automatic_layout", true);
+
+				WebWrap.createToolAction("automatic_edge_colors", "Assign random color to each action", "applications-graphics", "Ctrl+Shift+K", null, false, true);
+				WebWrap.toolAvailable("automatic_edge_colors", true);
+
+				WebWrap.createToolAction("rotate", "Rotate diagram counterclockwise", "object-rotate-left", "Ctrl+Shift+R", null, false, true);
+				WebWrap.toolAvailable("rotate", true);
+
+				WebWrap.toolAction.connect(function(actionName) {
+					switch (actionName) {
+						case 'zoom_in': toolbar.zoomIn(); break;
+						case 'zoom_out': toolbar.zoomOut(); break;
+						case 'zoom_reset': toolbar.zoomReset(); break;
+						case 'toggle_cycles': toolbar.toggleCycles(); break;
+						case 'toggle_control_points': toolbar.toggleControlPoints(); break;
+						case 'automatic_layout': toolbar.automaticLayout(); break;
+						case 'automatic_edge_colors': toolbar.automaticEdgeColors(); break;
+						case 'rotate': toolbar.rotate(); break;
+					}
+				});
+
+				toolbar.updateDisabledClasses();
+				toolbar.hideToolbars();
+			},
+			onHelpToggle: function(visible) {
+				WebWrap.tipsChecked(visible);
+			},
+			onCopyAvailable: function(isAvailable) {
+				WebWrap.copyAvailable(isAvailable);
+			},
+			onCutAvailable: function(isAvailable) {
+				WebWrap.cutAvailable(isAvailable);
+			},
+			onPasteAvailable: function(isAvailable) {
+				WebWrap.pasteAvailable(isAvailable);
+			},
+			onUndoAvailable: function(isAvailable) {
+				WebWrap.undoAvailable(isAvailable);
+			},
+			onRedoAvailable: function(isAvailable) {
+				WebWrap.redoAvailable(isAvailable);
+			},
+			onZoomInAvailable: function(isAvailable) {
+				WebWrap.toolAvailable("zoom_in", isAvailable);
+			},
+			onZoomOutAvailable: function(isAvailable) {
+				WebWrap.toolAvailable("zoom_out", isAvailable);
+			},
+			onZoomResetAvailable: function(isAvailable) {
+				WebWrap.toolAvailable("zoom_reset", isAvailable);
+			},
+			onToggleCycles: function(cyclesVisible) {
+				WebWrap.toolChecked("toggle_cycles", cyclesVisible);
+			},
+			onToggleControlPoints: function(controlPointsVisible) {
+				WebWrap.toolChecked("toggle_control_points", controlPointsVisible);
+			},
+		});
 
 	</script>
 </body>
 </html>
+

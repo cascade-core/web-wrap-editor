@@ -1,0 +1,143 @@
+{
+    "class": "ExampleApplication\\UniversalStateMachine",
+    "name": "Article",
+    "desc": "Article",
+    "table": "article",
+    "flupdo_resource": "database",
+    "io_name": "item",
+    "url": "/article/{id}",
+    "parent_url": "/article",
+    "default_access_policy": null,
+    "state_select": "\"exists\"",
+    "states": {
+        "exists": {
+            "label": "Exists",
+            "color": "#eeeeee"
+        },
+        "trash": {
+            "label": "Trash",
+            "color": "#ffeeee"
+        }
+    },
+    "actions": {
+        "create": {
+            "label": "Create",
+            "color": "#444444",
+            "transitions": {
+                "": {
+                    "targets": [
+                        "exists"
+                    ]
+                }
+            },
+            "heading": "New article",
+            "returns": "new_id",
+            "block": {
+                "inputs": {
+                    "item": null
+                },
+                "outputs": {
+                    "ref": "return_value"
+                }
+            }
+        },
+        "edit1": {
+            "label": "Edit #1",
+            "color": "#D11975",
+            "transitions": {
+                "exists": {
+                    "targets": [
+                        "exists"
+                    ]
+                }
+            },
+            "heading": "Edit article",
+            "block": {
+                "inputs": {
+                    "ref": null,
+                    "item": null
+                },
+                "outputs": []
+            }
+        },
+        "edit2": {
+            "label": "Edit #2",
+            "color": "#75D119",
+            "transitions": {
+                "exists": {
+                    "targets": [
+                        "exists", "trash"
+                    ]
+                }
+            }
+        },
+        "delete": {
+            "label": "delete",
+            "color": "#942192",
+            "transitions": {
+                "exists": {
+                    "targets": [
+                        ""
+                    ]
+                }
+            }
+        }
+    },
+    "properties": {
+        "id": {
+            "type": "number",
+            "label": "ID",
+            "is_pk": true,
+            "link": "/article/{id}",
+            "calculated": true
+        },
+        "title": {
+            "type": "text",
+            "label": "Title",
+            "required": true,
+            "link": "/article/{id}"
+        },
+        "state": {
+            "type": "text",
+            "label": "State",
+            "calculated": true
+        },
+        "perex": {
+            "type": "textarea",
+            "label": "Perex",
+            "required": true,
+            "tabular_hidden": true,
+            "class": "perex",
+            "rows": 10
+        },
+        "body_md": {
+            "type": "markdownarea",
+            "label": "Text",
+            "required": true,
+            "tabular_hidden": true,
+            "rows": 24
+        },
+        "created": {
+            "type": "datetime",
+            "label": "Created",
+            "format": "%Y-%m-%d %H:%M",
+            "readonly": true,
+            "tabular_hidden": false,
+            "tabular_width": 84,
+            "calculated": true
+        },
+        "modified": {
+            "type": "datetime",
+            "label": "Modified",
+            "format": "%Y-%m-%d %H:%M",
+            "readonly": true,
+            "tabular_hidden": false,
+            "tabular_width": 84,
+            "calculated": true
+        }
+    },
+    "default_filters": {
+        "order_by": "created",
+        "order_asc": false
+    }
+}
