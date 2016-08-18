@@ -193,7 +193,9 @@ void MainWindow::loadEditor(const QString &newGlueFileName)
 void MainWindow::reloadEditor()
 {
 	//loadEditor(glueFileName);
-	webView->reload();
+	QWebSettings::globalSettings()->clearMemoryCaches();
+	webView->settings()->clearMemoryCaches();
+	webView->triggerPageAction(QWebPage::ReloadAndBypassCache);
 }
 
 void MainWindow::unloadEditor()
